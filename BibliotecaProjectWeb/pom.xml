@@ -15,43 +15,53 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
     <dependencies>
-        <!-- Servlet API -->
+        <!-- Jakarta Servlet API (Servlet 6.0 / Tomcat 10.1) -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSP API -->
+        <!-- Jakarta JSP API -->
         <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>2.3.3</version>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>3.1.1</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSTL -->
+        <!-- Jakarta JSTL -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>3.0.1</version>
         </dependency>
 
-        <!-- JAX-WS para Java 11 (cliente Web Services) -->
+        <!-- Jakarta XML Web Services API + Metro 4 runtime -->
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
-            <version>2.3.3</version>
+            <version>4.0.2</version>
         </dependency>
-        
-        <!-- Commons Logging -->
+
+        <!-- Commons Logging (opcional) -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -67,8 +77,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
 
@@ -81,14 +91,45 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin para Tomcat (desarrollo local) -->
+            <!-- Generación de stubs Jakarta desde WSDL (Metro 4) -->
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>4.0.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlUrls>
+                                <wsdlUrl>${project.basedir}/src/main/resources/wsdl/autenticacion.wsdl</wsdlUrl>
+                            </wsdlUrls>
+                            <packageName>publicadores</packageName>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Ejecutar con un contenedor Jakarta compatible (Tomcat 10.x) -->
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven3-plugin</artifactId>
+                <version>1.10.15</version>
                 <configuration>
-                    <port>8080</port>
-                    <path>/biblioteca</path>
+                    <container>
+                        <containerId>tomcat10x</containerId>
+                        <type>embedded</type>
+                    </container>
+                    <configuration>
+                        <type>standalone</type>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.context>/BibliotecaWeb</cargo.context>
+                        </properties>
+                    </configuration>
                 </configuration>
             </plugin>
         </plugins>
