@@ -97,15 +97,111 @@
                 <artifactId>jaxws-maven-plugin</artifactId>
                 <version>4.0.2</version>
                 <executions>
+                    <!-- Autenticación -->
                     <execution>
+                        <id>wsimport-autenticacion</id>
                         <goals>
                             <goal>wsimport</goal>
                         </goals>
                         <configuration>
-                            <wsdlUrls>
-                                <wsdlUrl>${project.basedir}/src/main/resources/wsdl/autenticacion.wsdl</wsdlUrl>
-                            </wsdlUrls>
-                            <packageName>publicadores</packageName>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/autenticacion.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.autenticacion</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                    
+                    <!-- Lector -->
+                    <execution>
+                        <id>wsimport-lector</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/lector.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.lector</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                    
+                    <!-- Bibliotecario -->
+                    <execution>
+                        <id>wsimport-bibliotecario</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/bibliotecario.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.bibliotecario</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                    
+                    <!-- Libro -->
+                    <execution>
+                        <id>wsimport-libro</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/libro.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.libro</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                    
+                    <!-- Artículo Especial - DESHABILITADO: servicio no disponible en backend -->
+                    <!--
+                    <execution>
+                        <id>wsimport-articuloespecial</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/articuloespecial.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.articuloespecial</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
+                            <xdebug>true</xdebug>
+                            <extension>true</extension>
+                        </configuration>
+                    </execution>
+                    -->
+                    
+                    <!-- Préstamo -->
+                    <execution>
+                        <id>wsimport-prestamo</id>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <wsdlFiles>
+                                <wsdlFile>${project.basedir}/src/main/resources/wsdl/prestamo.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <packageName>publicadores.prestamo</packageName>
+                            <sourceDestDir>${project.build.directory}/generated-sources/wsimport</sourceDestDir>
+                            <keep>true</keep>
                             <xdebug>true</xdebug>
                             <extension>true</extension>
                         </configuration>
