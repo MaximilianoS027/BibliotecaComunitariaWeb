@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import publicadores.AutenticacionPublicadorService;
-import publicadores.AutenticacionPublicador;
+import publicadores.autenticacion.AutenticacionPublicadorService;
+import publicadores.autenticacion.AutenticacionPublicador;
 
 /**
  * Servlet para manejar el login de usuarios (Lectores y Bibliotecarios)
