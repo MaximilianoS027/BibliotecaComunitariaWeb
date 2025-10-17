@@ -39,12 +39,12 @@
                         <a class="nav-link active" href="home.jsp">Inicio</a>
                     </li>
                     <% if ("LECTOR".equals(rol)) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="catalogo.jsp">Catálogo</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarLibros">Catálogo</a>
+                    </li>
                     <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
                         <li class="nav-item">
                             <a class="nav-link" href="gestionLectores.jsp">Lectores</a>
@@ -104,7 +104,7 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">🔍 Catálogo</h5>
                         <p class="card-text">Explora nuestra colección de materiales</p>
-                        <a href="catalogo.jsp" class="btn btn-info text-white">Ver Catálogo</a>
+                        <a href="ListarLibros" class="btn btn-info text-white">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
@@ -133,9 +133,9 @@
             <div class="col-md-3">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">📚 Materiales</h5>
-                        <p class="card-text">Registrar donaciones y materiales</p>
-                        <a href="gestionMateriales.jsp" class="btn btn-success">Gestionar</a>
+                        <h5 class="card-title">📚 Libros</h5>
+                        <p class="card-text">Gestionar catálogo de libros</p>
+                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
                     </div>
                 </div>
             </div>

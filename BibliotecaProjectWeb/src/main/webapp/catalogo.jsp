@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="publicadores.libro.DtLibro" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%
     // Verificar que el usuario esté autenticado
     HttpSession userSession = request.getSession(false);
@@ -9,6 +12,15 @@
     
     String rol = (String) userSession.getAttribute("rol");
     String email = (String) userSession.getAttribute("usuarioEmail");
+    
+    @SuppressWarnings("unchecked")
+    List<DtLibro> libros = (List<DtLibro>) request.getAttribute("libros");
+    Integer totalLibros = (Integer) request.getAttribute("totalLibros");
+    String error = (String) request.getAttribute("error");
+    String success = request.getParameter("success");
+    String info = request.getParameter("info");
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -38,8 +50,13 @@
                         <a class="nav-link" href="home.jsp">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="catalogo.jsp">Catálogo</a>
+                        <a class="nav-link active" href="ListarLibros">Catálogo</a>
                     </li>
+                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="AgregarLibro">Agregar Libro</a>
+                    </li>
+                    <% } %>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -62,64 +79,165 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <h2>📖 Catálogo de Materiales</h2>
-                <p class="text-muted">Explora nuestra colección de libros y artículos especiales</p>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2>📖 Catálogo de Libros</h2>
+                        <p class="text-muted">Explora nuestra colección de libros</p>
+                    </div>
+                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                    <div>
+                        <a href="AgregarLibro" class="btn btn-success">
+                            ➕ Agregar Nuevo Libro
+                        </a>
+                    </div>
+                    <% } %>
+                </div>
             </div>
         </div>
 
-        <!-- Filtros de búsqueda -->
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
+        <!-- Mensajes de feedback -->
+        <% if ("agregar".equals(success)) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>¡Éxito!</strong> El libro ha sido agregado correctamente al catálogo.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <% } %>
+        
+        <% if (error != null) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> <%= error %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <% } %>
+
+        <!-- Barra de búsqueda y filtros -->
+        <div class="row mt-3 mb-4">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">🔍 Buscar Materiales</h5>
-                        <form>
-                            <div class="mb-3">
-                                <label for="busqueda" class="form-label">Término de búsqueda</label>
-                                <input type="text" class="form-control" id="busqueda" placeholder="Título, autor, ISBN...">
+                        <form id="formBusqueda" onsubmit="return buscarLibros()">
+                            <div class="row g-2">
+                                <div class="col-md-8">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           id="busqueda" 
+                                           placeholder="🔍 Buscar por título...">
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        Buscar
+                                    </button>
                             </div>
-                            <div class="mb-3">
-                                <label for="tipo" class="form-label">Tipo de material</label>
-                                <select class="form-select" id="tipo">
-                                    <option value="">Todos</option>
-                                    <option value="libro">Libros</option>
-                                    <option value="articulo">Artículos Especiales</option>
-                                </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Buscar</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">📊 Estadísticas</h5>
-                        <ul class="list-unstyled">
-                            <li><strong>Total de libros:</strong> 0</li>
-                            <li><strong>Artículos especiales:</strong> 0</li>
-                            <li><strong>Disponibles:</strong> 0</li>
-                            <li><strong>En préstamo:</strong> 0</li>
-                        </ul>
+                        <h6 class="card-title">📊 Estadísticas</h6>
+                        <p class="mb-1"><strong>Total de libros:</strong> <%= totalLibros != null ? totalLibros : 0 %></p>
+                        <p class="mb-0"><strong>Mostrando:</strong> <%= libros != null ? libros.size() : 0 %></p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Lista de materiales -->
-        <div class="row mt-4">
+        <!-- Lista de libros -->
+        <div class="row">
             <div class="col-12">
-                <div class="card">
+                <% if (libros != null && !libros.isEmpty()) { %>
+                <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">📚 Materiales Disponibles</h5>
-                        <div class="alert alert-info" role="alert">
-                            <h6 class="alert-heading">🚧 En Construcción</h6>
-                            <p>El catálogo estará disponible próximamente. Aquí podrás ver todos los libros y artículos especiales disponibles para préstamo.</p>
-                            <hr>
-                            <p class="mb-0">Por ahora, puedes usar el sistema de autenticación y navegar por las diferentes secciones.</p>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Título</th>
+                                        <th class="text-center">Páginas</th>
+                                        <th class="text-center">Fecha Registro</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (DtLibro libro : libros) { %>
+                                    <tr>
+                                        <td><code><%= libro.getId() %></code></td>
+                                        <td><strong><%= libro.getTitulo() %></strong></td>
+                                        <td class="text-center">
+                                            <span class="badge bg-info"><%= libro.getCantidadPaginas() %></span>
+                                        </td>
+                                        <td class="text-center">
+                                            <% 
+                                            try {
+                                                if (libro.getFechaRegistro() != null) { 
+                                            %>
+                                                <%= sdf.format(libro.getFechaRegistro()) %>
+                                            <% 
+                                                } else {
+                                            %>
+                                                -
+                                            <% 
+                                                }
+                                            } catch (Exception e) {
+                                            %>
+                                                -
+                                            <%
+                                            }
+                                            %>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="ConsultarLibro?id=<%= libro.getId() %>" 
+                                                   class="btn btn-sm btn-info text-white" 
+                                                   title="Ver detalles">
+                                                    👁️
+                                                </a>
+                                                <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                                                <a href="ModificarLibro?id=<%= libro.getId() %>" 
+                                                   class="btn btn-sm btn-warning" 
+                                                   title="Editar">
+                                                    ✏️ Editar
+                                                </a>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+                <% } else { %>
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-book text-muted" viewBox="0 0 16 16">
+                                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                            </svg>
+                        </div>
+                        <h5 class="text-muted">No hay libros en el catálogo</h5>
+                        <p class="text-muted mb-3">Aún no se han registrado libros en el sistema</p>
+                        <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                        <a href="AgregarLibro" class="btn btn-success">
+                            ➕ Agregar el Primer Libro
+                        </a>
+                        <% } %>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        
+        <!-- Botón para refrescar -->
+        <div class="row mt-3">
+            <div class="col-12 text-center">
+                <button onclick="location.reload()" class="btn btn-outline-secondary">
+                    🔄 Actualizar Catálogo
+                </button>
             </div>
         </div>
     </div>
@@ -139,5 +257,47 @@
     
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
+    
+    <script>
+        function buscarLibros() {
+            const busqueda = document.getElementById('busqueda').value.toLowerCase().trim();
+            
+            if (busqueda === '') {
+                // Recargar la página para mostrar todos los libros
+                window.location.href = 'ListarLibros';
+                return false;
+            }
+            
+            // Filtrar libros en el cliente (simple implementación)
+            const filas = document.querySelectorAll('tbody tr');
+            let encontrados = 0;
+            
+            filas.forEach(fila => {
+                const titulo = fila.querySelector('td:nth-child(2)').textContent.toLowerCase();
+                if (titulo.includes(busqueda)) {
+                    fila.style.display = '';
+                    encontrados++;
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+            
+            // Mostrar mensaje si no hay resultados
+            if (encontrados === 0) {
+                alert('No se encontraron libros que coincidan con: "' + busqueda + '"');
+            }
+            
+            return false; // Evitar envío del formulario
+        }
+        
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
