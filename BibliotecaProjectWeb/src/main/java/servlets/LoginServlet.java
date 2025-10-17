@@ -37,18 +37,12 @@ public class LoginServlet extends HttpServlet {
         String rol = request.getParameter("rol");
         
         try {
-            System.out.println("=== LOGIN ATTEMPT ===");
-            System.out.println("Email: " + email);
-            System.out.println("Rol: " + rol);
-            System.out.println("Password: " + (password != null ? "***" : "null"));
             
             String usuarioId = null;
             
             if ("lector".equals(rol)) {
                 // Autenticar lector usando Web Service
-                System.out.println("Intentando autenticar lector...");
                 usuarioId = autenticacionWS.autenticarLector(email, password);
-                System.out.println("Resultado autenticación lector: " + usuarioId);
                 
                 if (usuarioId != null && !usuarioId.isEmpty()) {
                     // Crear sesión
@@ -65,9 +59,7 @@ public class LoginServlet extends HttpServlet {
                 
             } else if ("bibliotecario".equals(rol)) {
                 // Autenticar bibliotecario usando Web Service
-                System.out.println("Intentando autenticar bibliotecario...");
                 usuarioId = autenticacionWS.autenticarBibliotecario(email, password);
-                System.out.println("Resultado autenticación bibliotecario: " + usuarioId);
                 
                 if (usuarioId != null && !usuarioId.isEmpty()) {
                     // Crear sesión
@@ -87,7 +79,6 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("login.jsp?error=1&role=" + rol);
             
         } catch (Exception e) {
-            System.out.println("ERROR en LoginServlet: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect("login.jsp?error=1&role=" + rol);
         }

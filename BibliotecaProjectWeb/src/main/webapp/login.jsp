@@ -103,7 +103,11 @@
                     
                     <div class="text-center">
                         <p class="text-muted">¿No tienes cuenta?</p>
-                        <a href="registro.jsp" class="btn btn-outline-secondary">Registrarse</a>
+                        <% if ("bibliotecario".equals(role)) { %>
+                            <a href="registro.jsp" class="btn btn-outline-success">Registrarse como Bibliotecario</a>
+                        <% } else { %>
+                            <a href="registro.jsp" class="btn btn-outline-secondary">Registrarse</a>
+                        <% } %>
                     </div>
                     
                     <div class="text-center mt-3">

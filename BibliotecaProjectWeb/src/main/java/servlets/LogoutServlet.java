@@ -34,7 +34,7 @@ public class LogoutServlet extends HttpServlet {
             session.invalidate();
         }
         
-        // Redirigir al login
-        response.sendRedirect("login.jsp");
+        // Redirigir a la página principal para que el usuario elija su rol
+        response.sendRedirect("index.jsp");
     }
 }

@@ -114,6 +114,60 @@
                         </form>
                     </div>
                 </div>
+                
+                <!-- Formulario de Cambio de Contraseña -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title">🔒 Cambiar Contraseña</h5>
+                        <form id="formCambiarPassword" action="CambiarPasswordBibliotecario" method="post" class="needs-validation" novalidate>
+                            <input type="hidden" name="email" value="<%= email %>">
+                            
+                            <div class="mb-3">
+                                <label for="oldPassword" class="form-label">Contraseña Actual *</label>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="oldPassword" 
+                                       name="oldPassword" 
+                                       placeholder="Ingrese su contraseña actual"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Por favor, ingrese su contraseña actual.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nueva Contraseña *</label>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="newPassword" 
+                                       name="newPassword" 
+                                       placeholder="Mínimo 6 caracteres"
+                                       minlength="6"
+                                       required>
+                                <div class="invalid-feedback">
+                                    La contraseña debe tener al menos 6 caracteres.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña *</label>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="confirmPassword" 
+                                       name="confirmPassword" 
+                                       placeholder="Repita la nueva contraseña"
+                                       required>
+                                <div class="invalid-feedback">
+                                    Las contraseñas deben coincidir.
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-warning">Cambiar Contraseña</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             
             <div class="col-md-4">
@@ -126,10 +180,23 @@
                                 <a href="misPrestamos.jsp" class="btn btn-outline-primary">Mis Préstamos</a>
                                 <a href="catalogo.jsp" class="btn btn-outline-info">Ver Catálogo</a>
                             <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
-                                <a href="gestionLectores.jsp" class="btn btn-outline-success">Gestionar Lectores</a>
-                                <a href="gestionMateriales.jsp" class="btn btn-outline-success">Gestionar Materiales</a>
-                                <a href="gestionPrestamos.jsp" class="btn btn-outline-success">Gestionar Préstamos</a>
+                                <a href="gestionBibliotecarios.jsp" class="btn btn-outline-success">Gestionar Bibliotecarios</a>
+                                <a href="reportes.jsp" class="btn btn-outline-success">Ver Reportes</a>
                             <% } %>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">🔐 Seguridad</h5>
+                        <ul class="list-unstyled">
+                            <li><strong>Último acceso:</strong> Hoy</li>
+                            <li><strong>Sesión activa:</strong> Sí</li>
+                            <li><strong>Cambio de contraseña:</strong> Disponible</li>
+                        </ul>
+                        <div class="alert alert-warning" role="alert">
+                            <small>Cambia tu contraseña regularmente para mayor seguridad.</small>
                         </div>
                     </div>
                 </div>
@@ -152,5 +219,46 @@
     
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Validación de Bootstrap
+        (function() {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Validación de contraseñas
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            var newPassword = document.getElementById('newPassword').value;
+            var confirmPassword = this.value;
+            
+            if (newPassword !== confirmPassword) {
+                this.setCustomValidity('Las contraseñas no coinciden');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        // Validación de contraseña actual vs nueva
+        document.getElementById('newPassword').addEventListener('input', function() {
+            var oldPassword = document.getElementById('oldPassword').value;
+            var newPassword = this.value;
+            
+            if (oldPassword === newPassword && oldPassword !== '') {
+                this.setCustomValidity('La nueva contraseña debe ser diferente a la actual');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    </script>
 </body>
 </html>
