@@ -11,6 +11,15 @@ $(document).ready(function() {
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+    
+    // Inicializar animaciones de estadísticas
+    inicializarEstadisticas();
+    
+    // Inicializar tema
+    inicializarTema();
+    
+    // Actualizar estadísticas cada 30 segundos
+    setInterval(actualizarEstadisticas, 30000);
 });
 
 /**
@@ -244,6 +253,218 @@ function cerrarSesion() {
     confirmarAccion('¿Está seguro que desea cerrar sesión?', function() {
         window.location.href = 'Logout';
     });
+}
+
+// ===================================
+// Funciones de animación de estadísticas
+// ===================================
+
+/**
+ * Inicializa las animaciones de las estadísticas
+ */
+function inicializarEstadisticas() {
+    // Animar números al cargar la página
+    animarNumero('libros-disponibles', 1247);
+    animarNumero('lectores-activos', 89);
+    animarNumero('prestamos-mes', 156);
+}
+
+/**
+ * Anima un número desde 0 hasta su valor final
+ * @param {string} elementId - ID del elemento
+ * @param {number} valorFinal - Valor final del número
+ * @param {number} duracion - Duración de la animación en ms
+ */
+function animarNumero(elementId, valorFinal, duracion = 2000) {
+    const elemento = document.getElementById(elementId);
+    if (!elemento) return;
+    
+    const incremento = valorFinal / (duracion / 16); // 60 FPS
+    let valorActual = 0;
+    
+    const animacion = setInterval(() => {
+        valorActual += incremento;
+        if (valorActual >= valorFinal) {
+            valorActual = valorFinal;
+            clearInterval(animacion);
+        }
+        
+        // Formatear número con comas
+        elemento.textContent = Math.floor(valorActual).toLocaleString();
+    }, 16);
+}
+
+/**
+ * Actualiza las estadísticas con valores reales (simulados)
+ */
+function actualizarEstadisticas() {
+    // Simular variaciones en las estadísticas
+    const variacion = () => Math.floor(Math.random() * 10) - 5; // -5 a +5
+    
+    const librosActuales = parseInt($('#libros-disponibles').text().replace(/,/g, ''));
+    const lectoresActuales = parseInt($('#lectores-activos').text().replace(/,/g, ''));
+    const prestamosActuales = parseInt($('#prestamos-mes').text().replace(/,/g, ''));
+    
+    const nuevosLibros = Math.max(0, librosActuales + variacion());
+    const nuevosLectores = Math.max(0, lectoresActuales + variacion());
+    const nuevosPrestamos = Math.max(0, prestamosActuales + variacion());
+    
+    // Animar hacia los nuevos valores
+    animarNumero('libros-disponibles', nuevosLibros, 1000);
+    animarNumero('lectores-activos', nuevosLectores, 1000);
+    animarNumero('prestamos-mes', nuevosPrestamos, 1000);
+}
+
+/**
+ * Efecto de partículas flotantes mejorado en el fondo
+ */
+function crearParticulas() {
+    const particulas = [];
+    const numParticulas = 30;
+    const colores = ['#667eea', '#764ba2', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140'];
+    
+    for (let i = 0; i < numParticulas; i++) {
+        const particula = document.createElement('div');
+        particula.className = 'particula';
+        const color = colores[Math.floor(Math.random() * colores.length)];
+        const size = Math.random() * 6 + 2; // 2-8px
+        const delay = Math.random() * 10; // 0-10s delay
+        
+        particula.style.cssText = `
+            position: fixed;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            left: ${Math.random() * 100}%;
+            top: 100vh;
+            animation: floatUp ${8 + Math.random() * 12}s linear infinite;
+            animation-delay: ${delay}s;
+            box-shadow: 0 0 10px ${color};
+        `;
+        
+        document.body.appendChild(particula);
+        particulas.push(particula);
+    }
+    
+    // Agregar CSS para la animación de flotar mejorada
+    if (!document.getElementById('particulas-css')) {
+        const style = document.createElement('style');
+        style.id = 'particulas-css';
+        style.textContent = `
+            @keyframes floatUp {
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(-100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Inicializar partículas al cargar
+$(document).ready(function() {
+    crearParticulas();
+    inicializarCarrusel();
+});
+
+// ===================================
+// Funciones del carrusel de libros
+// ===================================
+
+let currentSlide = 0;
+const slidesToShow = 3;
+
+/**
+ * Inicializa el carrusel de libros
+ */
+function inicializarCarrusel() {
+    const container = document.querySelector('.carousel-container');
+    if (!container) return;
+    
+    // Auto-avanzar cada 5 segundos
+    setInterval(() => {
+        moveCarousel(1);
+    }, 5000);
+}
+
+/**
+ * Mueve el carrusel en la dirección especificada
+ * @param {number} direction - 1 para siguiente, -1 para anterior
+ */
+function moveCarousel(direction) {
+    const container = document.querySelector('.carousel-container');
+    const bookCards = document.querySelectorAll('.book-card');
+    
+    if (!container || !bookCards.length) return;
+    
+    const totalSlides = bookCards.length;
+    const maxSlide = Math.max(0, totalSlides - slidesToShow);
+    
+    currentSlide += direction;
+    
+    if (currentSlide < 0) {
+        currentSlide = maxSlide;
+    } else if (currentSlide > maxSlide) {
+        currentSlide = 0;
+    }
+    
+    const translateX = -currentSlide * (200 + 24); // 200px width + 24px gap
+    container.style.transform = `translateX(${translateX}px)`;
+    
+    // Agregar efecto de rebote
+    container.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)';
+}
+
+// ===================================
+// Funciones del modo oscuro/claro
+// ===================================
+
+/**
+ * Alterna entre modo oscuro y claro
+ */
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+    
+    // Efecto de transición suave
+    body.style.transition = 'all 0.3s ease';
+}
+
+/**
+ * Inicializa el tema guardado
+ */
+function inicializarTema() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    body.setAttribute('data-theme', savedTheme);
+    themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 }
 
 
