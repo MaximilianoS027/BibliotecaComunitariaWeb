@@ -102,12 +102,23 @@
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">🔍 Catálogo</h5>
-                        <p class="card-text">Explora nuestra colección de materiales</p>
-                        <a href="ListarLibros" class="btn btn-info text-white">Ver Catálogo</a>
+                        <h5 class="card-title">📚 Catálogo</h5>
+                        <p class="card-text">Explora nuestra colección completa</p>
+                        <a href="ListarMateriales" class="btn btn-info text-white">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🎁 Artículos Especiales</h5>
+                        <p class="card-text">Explora artículos especiales disponibles</p>
+                        <a href="ListarArticulosEspeciales" class="btn btn-warning text-white">Ver Artículos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
@@ -134,8 +145,17 @@
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">📚 Libros</h5>
-                        <p class="card-text">Gestionar catálogo de libros</p>
-                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
+                        <p class="card-text">Gestionar Libros</p>
+                        <a href="ListarMateriales" class="btn btn-success">Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🎁 Artículos Especiales</h5>
+                        <p class="card-text">Gestionar artículos especiales</p>
+                        <a href="ListarArticulosEspeciales" class="btn btn-success">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
@@ -148,6 +168,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-md-3">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
