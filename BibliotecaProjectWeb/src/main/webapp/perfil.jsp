@@ -76,6 +76,75 @@
 
     <!-- Main Content -->
     <div class="container mt-4">
+        <!-- Mensajes de éxito y error -->
+        <%
+            String success = request.getParameter("success");
+            String error = request.getParameter("error");
+            
+            if (success != null) {
+                if ("password_cambiado".equals(success)) {
+        %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✅ ¡Éxito!</strong> Tu contraseña ha sido cambiada correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <%
+                }
+            }
+            
+            if (error != null) {
+                String errorMessage = "";
+                String errorClass = "alert-danger";
+                
+                switch (error) {
+                    case "campos_vacios":
+                        errorMessage = "❌ Todos los campos son obligatorios.";
+                        break;
+                    case "password_no_coincide":
+                        errorMessage = "❌ Las contraseñas nuevas no coinciden.";
+                        break;
+                    case "password_corto":
+                        errorMessage = "❌ La nueva contraseña debe tener al menos 6 caracteres.";
+                        break;
+                    case "password_igual":
+                        errorMessage = "❌ La nueva contraseña debe ser diferente a la actual.";
+                        break;
+                    case "password_incorrecto":
+                        errorMessage = "❌ La contraseña actual es incorrecta.";
+                        break;
+                    case "bibliotecario_no_existe":
+                        errorMessage = "❌ El bibliotecario no existe en el sistema.";
+                        break;
+                    case "lector_no_existe":
+                        errorMessage = "❌ El lector no existe en el sistema.";
+                        break;
+                    case "rol_invalido":
+                        errorMessage = "❌ Rol de usuario inválido.";
+                        break;
+                    case "sistema":
+                        errorMessage = "❌ Error interno del sistema. Intente nuevamente.";
+                        break;
+                    case "cambio_no_persistio":
+                        errorMessage = "❌ El cambio de contraseña no se guardó correctamente. Contacte al administrador.";
+                        break;
+                    case "verificacion_fallida":
+                        errorMessage = "❌ No se pudo verificar el cambio de contraseña. Intente nuevamente.";
+                        break;
+                    case "numero_empleado_no_encontrado":
+                        errorMessage = "❌ No se pudo encontrar el número de empleado. Contacte al administrador.";
+                        break;
+                    default:
+                        errorMessage = "❌ Error desconocido. Intente nuevamente.";
+                }
+        %>
+        <div class="alert <%= errorClass %> alert-dismissible fade show" role="alert">
+            <strong><%= errorMessage %></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <%
+            }
+        %>
+        
         <div class="row">
             <div class="col-12">
                 <h2>👤 Mi Perfil</h2>
@@ -119,7 +188,7 @@
                 <div class="card mt-4">
                     <div class="card-body">
                         <h5 class="card-title">🔒 Cambiar Contraseña</h5>
-                        <form id="formCambiarPassword" action="CambiarPasswordBibliotecario" method="post" class="needs-validation" novalidate>
+                        <form id="formCambiarPassword" action="CambiarPassword" method="post" class="needs-validation" novalidate>
                             <input type="hidden" name="email" value="<%= email %>">
                             
                             <div class="mb-3">
