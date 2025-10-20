@@ -82,7 +82,7 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h2>📖 Catálogo de Libros</h2>
-                        <p class="text-muted">Explora nuestra colección de libros</p>
+                        <p class="text-light">Explora nuestra colección de libros</p>
                     </div>
                     <% if ("BIBLIOTECARIO".equals(rol)) { %>
                     <div>
@@ -154,11 +154,10 @@
                             <table class="table table-hover">
                                 <thead class="table-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Título</th>
-                                        <th class="text-center">Páginas</th>
-                                        <th class="text-center">Fecha Registro</th>
-                                        <th class="text-center">Acciones</th>
+                                        <th style="width: 15%;">ID</th>
+                                        <th style="width: 45%;">Título</th>
+                                        <th class="text-center" style="width: 15%;">Páginas</th>
+                                        <th class="text-center" style="width: 25%;">Fecha Registro</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -172,37 +171,48 @@
                                         <td class="text-center">
                                             <% 
                                             try {
-                                                if (libro.getFechaRegistro() != null) { 
+                                                Object fechaObj = libro.getFechaRegistro();
+                                                if (fechaObj != null) {
+                                                    String fechaStr = "";
+                                                    String fechaString = fechaObj.toString();
+                                                    
+                                                    // Si contiene formato ISO con T, extraer solo la fecha
+                                                    if (fechaString.contains("T")) {
+                                                        // Extraer solo la parte de la fecha (antes de la T)
+                                                        String soloFecha = fechaString.split("T")[0];
+                                                        // Dividir por guiones y reorganizar
+                                                        String[] partes = soloFecha.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = soloFecha;
+                                                        }
+                                                    } else {
+                                                        // Intentar formatear como fecha normal
+                                                        try {
+                                                            java.util.Date fecha = sdf.parse(fechaString);
+                                                            fechaStr = sdf.format(fecha);
+                                                        } catch (Exception parseEx) {
+                                                            fechaStr = fechaString;
+                                                        }
+                                                    }
                                             %>
-                                                <%= sdf.format(libro.getFechaRegistro()) %>
+                                                <span class="badge bg-success"><%= fechaStr %></span>
                                             <% 
                                                 } else {
                                             %>
-                                                -
+                                                <span class="badge bg-secondary">Sin fecha</span>
                                             <% 
                                                 }
                                             } catch (Exception e) {
+                                                // Mostrar información de debug
+                                                System.out.println("Error al formatear fecha: " + e.getMessage());
+                                                System.out.println("Tipo de fecha: " + (libro.getFechaRegistro() != null ? libro.getFechaRegistro().getClass().getName() : "null"));
                                             %>
-                                                -
+                                                <span class="badge bg-warning" title="Error: <%= e.getMessage() %>">Error</span>
                                             <%
                                             }
                                             %>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a href="ConsultarLibro?id=<%= libro.getId() %>" 
-                                                   class="btn btn-sm btn-info text-white" 
-                                                   title="Ver detalles">
-                                                    👁️
-                                                </a>
-                                                <% if ("BIBLIOTECARIO".equals(rol)) { %>
-                                                <a href="ModificarLibro?id=<%= libro.getId() %>" 
-                                                   class="btn btn-sm btn-warning" 
-                                                   title="Editar">
-                                                    ✏️ Editar
-                                                </a>
-                                                <% } %>
-                                            </div>
                                         </td>
                                     </tr>
                                     <% } %>

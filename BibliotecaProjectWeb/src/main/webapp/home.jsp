@@ -78,7 +78,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert">
+                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert" style="z-index: 1; position: relative;">
                     <h4 class="alert-heading">¡Bienvenido, <%= email %>!</h4>
                     <p>Has iniciado sesión como <strong><%= rol %></strong></p>
                     <hr>
@@ -141,21 +141,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">📚 Libros</h5>
-                        <p class="card-text">Gestionar Libros</p>
-                        <a href="ListarMateriales" class="btn btn-success">Ver Catálogo</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">🎁 Artículos Especiales</h5>
-                        <p class="card-text">Gestionar artículos especiales</p>
-                        <a href="ListarArticulosEspeciales" class="btn btn-success">Ver Catálogo</a>
+                        <h5 class="card-title">📚 Materiales</h5>
+                        <p class="card-text">Gestionar libros y artículos especiales</p>
+                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
                     </div>
                 </div>
             </div>

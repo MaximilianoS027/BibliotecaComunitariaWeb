@@ -65,6 +65,8 @@ public class ListarLibrosServlet extends HttpServlet {
                         if (libro != null) {
                             libros.add(libro);
                             System.out.println("Libro agregado: " + libro.getTitulo());
+                            System.out.println("Fecha registro: " + libro.getFechaRegistro());
+                            System.out.println("Tipo de fecha: " + (libro.getFechaRegistro() != null ? libro.getFechaRegistro().getClass().getName() : "null"));
                         }
                     } catch (Exception e) {
                         System.out.println("Error al obtener libro " + item + ": " + e.getMessage());
