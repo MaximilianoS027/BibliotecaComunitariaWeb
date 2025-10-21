@@ -66,6 +66,9 @@
                             <li><a class="dropdown-item" href="AgregarArticuloEspecial">🎁 Agregar Artículo Especial</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="TrazabilidadInventario">📊 Trazabilidad</a>
+                    </li>
                     <% } %>
                 </ul>
                 <ul class="navbar-nav">

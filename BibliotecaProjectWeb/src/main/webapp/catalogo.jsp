@@ -56,6 +56,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="AgregarLibro">Agregar Libro</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="TrazabilidadInventario">📊 Trazabilidad</a>
+                    </li>
                     <% } %>
                 </ul>
                 <ul class="navbar-nav">

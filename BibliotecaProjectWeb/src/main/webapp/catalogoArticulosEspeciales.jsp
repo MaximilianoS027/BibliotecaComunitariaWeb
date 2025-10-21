@@ -58,6 +58,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="AgregarArticuloEspecial">Agregar Artículo Especial</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="TrazabilidadInventario">📊 Trazabilidad</a>
+                    </li>
                     <% } %>
                 </ul>
                 <ul class="navbar-nav">
