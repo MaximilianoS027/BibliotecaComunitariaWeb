@@ -106,27 +106,35 @@
         </div>
         <% } %>
 
-        <!-- Estadísticas -->
-        <div class="row mt-3 mb-4">
-            <div class="col-md-12">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h6 class="card-title">📊 Estadísticas del Catálogo</h6>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p class="mb-1"><strong>Total de materiales:</strong> <%= totalMateriales != null ? totalMateriales : 0 %></p>
+    <!-- Búsqueda + Estadísticas -->
+    <div class="row mt-3 mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form id="formBusquedaMat" onsubmit="return buscarMateriales()">
+                        <div class="row g-2">
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="busquedaMat" placeholder="🔍 Buscar por título o descripción...">
                             </div>
                             <div class="col-md-4">
-                                <p class="mb-1"><strong>📚 Libros:</strong> <%= totalLibros != null ? totalLibros : 0 %></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="mb-1"><strong>🎁 Artículos especiales:</strong> <%= totalArticulos != null ? totalArticulos : 0 %></p>
+                                <button type="submit" class="btn btn-primary w-100">Buscar</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">📊 Estadísticas del Catálogo</h6>
+                    <p class="mb-1"><strong>Total de materiales:</strong> <%= totalMateriales != null ? totalMateriales : 0 %></p>
+                    <p class="mb-1"><strong>📚 Libros:</strong> <%= totalLibros != null ? totalLibros : 0 %></p>
+                    <p class="mb-0"><strong>🎁 Artículos especiales:</strong> <%= totalArticulos != null ? totalArticulos : 0 %></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
         <!-- Sección de Libros -->
         <div class="row mt-4">
@@ -150,25 +158,53 @@
                                     <% for (DtLibro libro : libros) { %>
                                     <tr>
                                         <td><code><%= libro.getId() %></code></td>
-                                        <td><strong><%= libro.getTitulo() %></strong></td>
+                                        <td><strong><%= new String(libro.getTitulo().getBytes("ISO-8859-1"), "UTF-8") %></strong></td>
                                         <td class="text-center">
                                             <span class="badge bg-info"><%= libro.getCantidadPaginas() %></span>
                                         </td>
                                         <td class="text-center">
                                             <% 
                                             try {
-                                                if (libro.getFechaRegistro() != null) { 
+                                                Object fechaObj = libro.getFechaRegistro();
+                                                if (fechaObj != null) {
+                                                    String fechaStr = "";
+                                                    String fechaString = fechaObj.toString();
+                                                    
+                                                    // Si contiene formato ISO con T, extraer solo la fecha
+                                                    if (fechaString.contains("T")) {
+                                                        String soloFecha = fechaString.split("T")[0];
+                                                        String[] partes = soloFecha.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = soloFecha;
+                                                        }
+                                                    } else if (fechaString.contains("-")) {
+                                                        String[] partes = fechaString.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = fechaString;
+                                                        }
+                                                    } else {
+                                                        try {
+                                                            java.util.Date fecha = sdf.parse(fechaString);
+                                                            fechaStr = sdf.format(fecha);
+                                                        } catch (Exception parseEx) {
+                                                            fechaStr = fechaString;
+                                                        }
+                                                    }
                                             %>
-                                                <%= sdf.format(libro.getFechaRegistro()) %>
+                                                <span class="badge bg-success"><%= fechaStr %></span>
                                             <% 
                                                 } else {
                                             %>
-                                                -
+                                                <span class="badge bg-secondary">Sin fecha</span>
                                             <% 
                                                 }
                                             } catch (Exception e) {
                                             %>
-                                                -
+                                                <span class="badge bg-warning">Error</span>
                                             <%
                                             }
                                             %>
@@ -181,11 +217,11 @@
                                                     👁️ Ver
                                                 </a>
                                                 <% if ("LECTOR".equals(rol)) { %>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-success" 
-                                                        title="Solicitar préstamo">
+                                                <a href="NuevoPrestamo?materialId=<%= libro.getId() %>&materialTipo=Libro" 
+                                                   class="btn btn-sm btn-success" 
+                                                   title="Solicitar préstamo">
                                                     📋 Solicitar
-                                                </button>
+                                                </a>
                                                 <% } %>
                                             </div>
                                         </td>
@@ -230,7 +266,7 @@
                                     <% for (DtArticuloEspecial articulo : articulos) { %>
                                     <tr>
                                         <td><code><%= articulo.getId() %></code></td>
-                                        <td><strong><%= articulo.getDescripcion() %></strong></td>
+                                        <td><strong><%= new String(articulo.getDescripcion().getBytes("ISO-8859-1"), "UTF-8") %></strong></td>
                                         <td class="text-center">
                                             <span class="badge bg-warning text-dark"><%= articulo.getPesoKg() %> kg</span>
                                         </td>
@@ -240,18 +276,46 @@
                                         <td class="text-center">
                                             <% 
                                             try {
-                                                if (articulo.getFechaRegistro() != null) { 
+                                                Object fechaObj = articulo.getFechaRegistro();
+                                                if (fechaObj != null) {
+                                                    String fechaStr = "";
+                                                    String fechaString = fechaObj.toString();
+                                                    
+                                                    // Si contiene formato ISO con T, extraer solo la fecha
+                                                    if (fechaString.contains("T")) {
+                                                        String soloFecha = fechaString.split("T")[0];
+                                                        String[] partes = soloFecha.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = soloFecha;
+                                                        }
+                                                    } else if (fechaString.contains("-")) {
+                                                        String[] partes = fechaString.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = fechaString;
+                                                        }
+                                                    } else {
+                                                        try {
+                                                            java.util.Date fecha = sdf.parse(fechaString);
+                                                            fechaStr = sdf.format(fecha);
+                                                        } catch (Exception parseEx) {
+                                                            fechaStr = fechaString;
+                                                        }
+                                                    }
                                             %>
-                                                <%= sdf.format(articulo.getFechaRegistro()) %>
+                                                <span class="badge bg-success"><%= fechaStr %></span>
                                             <% 
                                                 } else {
                                             %>
-                                                -
+                                                <span class="badge bg-secondary">Sin fecha</span>
                                             <% 
                                                 }
                                             } catch (Exception e) {
                                             %>
-                                                -
+                                                <span class="badge bg-warning">Error</span>
                                             <%
                                             }
                                             %>
@@ -265,11 +329,11 @@
                                                     👁️ Ver
                                                 </button>
                                                 <% if ("LECTOR".equals(rol)) { %>
-                                                <button type="button" 
-                                                        class="btn btn-sm btn-success" 
-                                                        title="Solicitar préstamo">
+                                                <a href="NuevoPrestamo?materialId=<%= articulo.getId() %>&materialTipo=ArticuloEspecial" 
+                                                   class="btn btn-sm btn-success" 
+                                                   title="Solicitar préstamo">
                                                     📋 Solicitar
-                                                </button>
+                                                </a>
                                                 <% } %>
                                             </div>
                                         </td>
@@ -339,6 +403,22 @@
     <script src="assets/js/app.js"></script>
     
     <script>
+        function buscarMateriales() {
+            const q = document.getElementById('busquedaMat').value.toLowerCase().trim();
+            // Filtra filas de ambas tablas (libros y artículos)
+            const filas = document.querySelectorAll('tbody tr');
+            let encontrados = 0;
+            filas.forEach(f => {
+                const columnas = f.querySelectorAll('td');
+                const texto = Array.from(columnas).map(td => td.textContent.toLowerCase()).join(' ');
+                if (!q || texto.includes(q)) { f.style.display = ''; encontrados++; }
+                else { f.style.display = 'none'; }
+            });
+            if (q && encontrados === 0) {
+                alert('Sin resultados para: \'' + q + '\'');
+            }
+            return false;
+        }
         function verDetallesArticulo(id, descripcion, peso, dimensiones) {
             document.getElementById('modalArticuloId').textContent = id;
             document.getElementById('modalArticuloDescripcion').textContent = descripcion;

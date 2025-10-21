@@ -207,6 +207,18 @@
                 </executions>
             </plugin>
 
+            <!-- Plugin de Tomcat Maven -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/BibliotecaWeb</path>
+                    <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                </configuration>
+            </plugin>
+
             <!-- Ejecutar con un contenedor Jakarta compatible (Tomcat 10.x) -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
