@@ -39,21 +39,21 @@
                         <a class="nav-link active" href="home.jsp">Inicio</a>
                     </li>
                     <% if ("LECTOR".equals(rol)) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="catalogo.jsp">Catálogo</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarLibros">Catálogo</a>
+                    </li>
                     <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionLectores.jsp">Lectores</a>
+                            <a class="nav-link" href="ListarLectores">Lectores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionMateriales.jsp">Materiales</a>
+                            <a class="nav-link" href="ListarLibros">Materiales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionPrestamos.jsp">Préstamos</a>
+                            <a class="nav-link" href="RegistroLector">Registrar Lector</a>
                         </li>
                     <% } %>
                 </ul>
@@ -78,7 +78,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert">
+                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert" style="z-index: 1; position: relative;">
                     <h4 class="alert-heading">¡Bienvenido, <%= email %>!</h4>
                     <p>Has iniciado sesión como <strong><%= rol %></strong></p>
                     <hr>
@@ -95,25 +95,27 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">📖 Mis Préstamos</h5>
                         <p class="card-text">Consulta el estado de tus préstamos activos</p>
-                        <a href="misPrestamos.jsp" class="btn btn-primary">Ver Préstamos</a>
+                        <a href="MisPrestamos" class="btn btn-primary">Ver Préstamos</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">🔍 Catálogo</h5>
-                        <p class="card-text">Explora nuestra colección de materiales</p>
-                        <a href="catalogo.jsp" class="btn btn-info text-white">Ver Catálogo</a>
+                        <h5 class="card-title">📚 Catálogo</h5>
+                        <p class="card-text">Explora nuestra colección completa</p>
+                        <a href="ListarMateriales" class="btn btn-info text-white">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">➕ Nuevo Préstamo</h5>
                         <p class="card-text">Solicita un nuevo préstamo de material</p>
-                        <a href="nuevoPrestamo.jsp" class="btn btn-success">Solicitar</a>
+                        <a href="NuevoPrestamo" class="btn btn-success">Solicitar</a>
                     </div>
                 </div>
             </div>
@@ -121,25 +123,36 @@
         <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
         <!-- Dashboard para Bibliotecario -->
         <div class="row mt-4">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">👥 Lectores</h5>
                         <p class="card-text">Gestionar lectores del sistema</p>
-                        <a href="gestionLectores.jsp" class="btn btn-success">Gestionar</a>
+                        <a href="ListarLectores" class="btn btn-success">Gestionar</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">📚 Materiales</h5>
-                        <p class="card-text">Registrar donaciones y materiales</p>
-                        <a href="gestionMateriales.jsp" class="btn btn-success">Gestionar</a>
+                        <p class="card-text">Gestionar libros y artículos especiales</p>
+                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">➕ Registrar Lector</h5>
+                        <p class="card-text">Registrar nuevo lector en el sistema</p>
+                        <a href="RegistroLector" class="btn btn-success">Registrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">📋 Préstamos</h5>
@@ -148,12 +161,21 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">📊 Reportes</h5>
                         <p class="card-text">Generar reportes del sistema</p>
                         <a href="reportes.jsp" class="btn btn-success">Ver Reportes</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">⚙️ Configuración</h5>
+                        <p class="card-text">Configurar parámetros del sistema</p>
+                        <a href="configuracion.jsp" class="btn btn-success">Configurar</a>
                     </div>
                 </div>
             </div>

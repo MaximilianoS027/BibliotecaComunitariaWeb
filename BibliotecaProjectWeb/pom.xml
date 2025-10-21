@@ -169,8 +169,7 @@
                         </configuration>
                     </execution>
                     
-                    <!-- Artículo Especial - DESHABILITADO: servicio no disponible en backend -->
-                    <!--
+                    <!-- Artículo Especial -->
                     <execution>
                         <id>wsimport-articuloespecial</id>
                         <goals>
@@ -187,7 +186,6 @@
                             <extension>true</extension>
                         </configuration>
                     </execution>
-                    -->
                     
                     <!-- Préstamo -->
                     <execution>
@@ -207,6 +205,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Plugin de Tomcat Maven -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/BibliotecaWeb</path>
+                    <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+                </configuration>
             </plugin>
 
             <!-- Ejecutar con un contenedor Jakarta compatible (Tomcat 10.x) -->

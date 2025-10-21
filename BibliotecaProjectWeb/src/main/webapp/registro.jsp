@@ -47,26 +47,45 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.jsp">📚 Biblioteca Comunitaria</a>
+            <a class="navbar-brand" href="home.jsp">📚 Biblioteca Comunitaria</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                     data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.jsp">Inicio</a>
+                        <a class="nav-link" href="home.jsp">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.jsp">Iniciar Sesión</a>
+                        <a class="nav-link" href="ListarLectores">Lectores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarLibros">Materiales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="RegistroLector">Registrar Lector</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                           role="button" data-bs-toggle="dropdown">
+                            👤 <%= email %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="perfil.jsp">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="Logout">Cerrar Sesión</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Registration Form -->
-    <div class="container mt-5">
+    <!-- Main Content -->
+    <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="form-container">

@@ -49,20 +49,35 @@
                     
                     <% 
                     String role = request.getParameter("role");
-                    String rolTexto = "lector";
-                    String rolColor = "primary";
-                    if ("bibliotecario".equals(role)) {
+                    String rolTexto = "";
+                    String rolColor = "info";
+                    boolean mostrarRol = false;
+                    
+                    if ("lector".equals(role)) {
+                        rolTexto = "lector";
+                        rolColor = "primary";
+                        mostrarRol = true;
+                    } else if ("bibliotecario".equals(role)) {
                         rolTexto = "bibliotecario";
                         rolColor = "success";
+                        mostrarRol = true;
                     }
                     %>
                     
+                    <% if (mostrarRol) { %>
                     <div class="alert alert-<%= rolColor %> text-center" role="alert">
                         Ingresando como <strong><%= rolTexto.toUpperCase() %></strong>
                     </div>
+                    <% } else { %>
+                    <div class="alert alert-<%= rolColor %> text-center" role="alert">
+                        <strong>Ingresar como Usuario</strong>
+                    </div>
+                    <% } %>
                     
                     <form id="loginForm" action="Login" method="post" class="needs-validation" novalidate>
+                        <% if (mostrarRol) { %>
                         <input type="hidden" name="rol" value="<%= rolTexto %>">
+                        <% } %>
                         
                         <div class="form-group mb-3">
                             <label for="email" class="form-label">Email</label>
