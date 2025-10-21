@@ -53,18 +53,22 @@
                     <li class="nav-item">
                         <a class="nav-link" href="home.jsp">Inicio</a>
                     </li>
+                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarLectores">Lectores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ListarMateriales">Materiales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarPrestamos">Préstamos</a>
+                    </li>
+                    <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="MisPrestamos">Mis Préstamos</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="ListarMateriales">Catálogo</a>
-                    </li>
-                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            Agregar Material
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="AgregarLibro">📚 Agregar Libro</a></li>
-                            <li><a class="dropdown-item" href="AgregarArticuloEspecial">🎁 Agregar Artículo Especial</a></li>
-                        </ul>
                     </li>
                     <% } %>
                 </ul>
@@ -94,6 +98,16 @@
                         <h2>📖 Catálogo de Materiales</h2>
                         <p class="text-muted">Explora nuestra colección completa</p>
                     </div>
+                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                    <div class="d-flex gap-2">
+                        <a href="AgregarLibro" class="btn btn-success">
+                            ➕ Agregar Libro
+                        </a>
+                        <a href="AgregarArticuloEspecial" class="btn btn-info text-white">
+                            ➕ Agregar Artículo Especial
+                        </a>
+                    </div>
+                    <% } %>
                 </div>
             </div>
         </div>

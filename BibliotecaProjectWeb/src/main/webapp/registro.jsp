@@ -52,10 +52,10 @@
                         <a class="nav-link" href="ListarLectores">Lectores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ListarLibros">Materiales</a>
+                        <a class="nav-link" href="ListarMateriales">Materiales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="RegistroLector">Registrar Lector</a>
+                        <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">

@@ -40,20 +40,20 @@
                     </li>
                     <% if ("LECTOR".equals(rol)) { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
+                            <a class="nav-link" href="MisPrestamos">Mis Préstamos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="catalogo.jsp">Catálogo</a>
+                            <a class="nav-link" href="ListarMateriales">Catálogo</a>
                         </li>
                     <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionLectores.jsp">Lectores</a>
+                            <a class="nav-link" href="ListarLectores">Lectores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionMateriales.jsp">Materiales</a>
+                            <a class="nav-link" href="ListarMateriales">Materiales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionPrestamos.jsp">Préstamos</a>
+                            <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                         </li>
                     <% } %>
                 </ul>

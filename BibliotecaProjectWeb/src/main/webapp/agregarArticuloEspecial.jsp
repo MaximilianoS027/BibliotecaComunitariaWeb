@@ -47,13 +47,13 @@
                         <a class="nav-link" href="home.jsp">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ListarLibros">Libros</a>
+                        <a class="nav-link" href="ListarLectores">Lectores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ListarArticulosEspeciales">Artículos Especiales</a>
+                        <a class="nav-link active" href="ListarMateriales">Materiales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="AgregarArticuloEspecial">Agregar Artículo Especial</a>
+                        <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
