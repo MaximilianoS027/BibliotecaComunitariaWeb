@@ -47,13 +47,13 @@
                         </li>
                     <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionLectores.jsp">Lectores</a>
+                            <a class="nav-link" href="ListarLectores">Lectores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionMateriales.jsp">Materiales</a>
+                            <a class="nav-link" href="ListarLibros">Materiales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="gestionPrestamos.jsp">Préstamos</a>
+                            <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                         </li>
                     <% } %>
                 </ul>

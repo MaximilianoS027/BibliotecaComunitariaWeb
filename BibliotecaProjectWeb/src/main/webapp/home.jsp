@@ -21,6 +21,9 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
@@ -53,7 +56,7 @@
                             <a class="nav-link" href="ListarLibros">Materiales</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="RegistroLector">Registrar Lector</a>
+                            <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                         </li>
                     <% } %>
                 </ul>
@@ -122,60 +125,124 @@
         </div>
         <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
         <!-- Dashboard para Bibliotecario -->
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
+        <div class="row mt-4 row-cols-1 row-cols-lg-3 g-4">
+            <!-- Botón Lectores -->
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center d-flex flex-column">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-success"></i>
+                        </div>
                         <h5 class="card-title">👥 Lectores</h5>
-                        <p class="card-text">Gestionar lectores del sistema</p>
-                        <a href="ListarLectores" class="btn btn-success">Gestionar</a>
+                        <p class="card-text flex-grow-1">Gestionar lectores del sistema, registrar nuevos usuarios y administrar estados</p>
+                        <a href="ListarLectores" class="btn btn-success btn-lg w-100 mt-auto">Gestionar Lectores</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
+            
+            <!-- Botón Materiales -->
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center d-flex flex-column">
+                        <div class="mb-3">
+                            <i class="fas fa-books fa-3x text-info"></i>
+                        </div>
                         <h5 class="card-title">📚 Materiales</h5>
-                        <p class="card-text">Gestionar libros y artículos especiales</p>
-                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
+                        <p class="card-text flex-grow-1">Administrar catálogo de libros y artículos especiales, agregar nuevos materiales</p>
+                        <a href="ListarLibros" class="btn btn-info btn-lg w-100 mt-auto text-white">Gestionar Materiales</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">➕ Registrar Lector</h5>
-                        <p class="card-text">Registrar nuevo lector en el sistema</p>
-                        <a href="RegistroLector" class="btn btn-success">Registrar</a>
+            
+            <!-- Botón Préstamos -->
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center d-flex flex-column">
+                        <div class="mb-3">
+                            <i class="fas fa-clipboard-list fa-3x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">📋 Préstamos</h5>
+                        <p class="card-text flex-grow-1">Supervisar préstamos activos, gestionar devoluciones y estados</p>
+                        <a href="ListarPrestamos" class="btn btn-warning btn-lg w-100 mt-auto">Gestionar Préstamos</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
-            <div class="col-md-4">
+        
+        <!-- Sección de Reportes -->
+        <div class="row mt-5">
+            <div class="col-12">
                 <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">📋 Préstamos</h5>
-                        <p class="card-text">Actualizar estado de préstamos</p>
-                        <a href="gestionPrestamos.jsp" class="btn btn-success">Gestionar</a>
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="mb-0">📊 Reportes y Estadísticas del Sistema</h4>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">📊 Reportes</h5>
-                        <p class="card-text">Generar reportes del sistema</p>
-                        <a href="reportes.jsp" class="btn btn-success">Ver Reportes</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">⚙️ Configuración</h5>
-                        <p class="card-text">Configurar parámetros del sistema</p>
-                        <a href="configuracion.jsp" class="btn btn-success">Configurar</a>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Estadísticas Generales -->
+                            <div class="col-md-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <h3 class="text-success mb-1">150</h3>
+                                    <p class="text-muted mb-0">Total Lectores</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <h3 class="text-info mb-1">89</h3>
+                                    <p class="text-muted mb-0">Libros Disponibles</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <h3 class="text-warning mb-1">23</h3>
+                                    <p class="text-muted mb-0">Préstamos Activos</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="text-center p-3 bg-light rounded">
+                                    <h3 class="text-danger mb-1">5</h3>
+                                    <p class="text-muted mb-0">Préstamos Vencidos</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <!-- Gráficas -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">📈 Préstamos por Mes</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="prestamosChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">📚 Tipos de Material</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="materialesChart" width="400" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">👥 Lectores por Estado</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <canvas id="lectoresChart" width="400" height="150"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,8 +263,111 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
+    
+    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+    <script>
+        // Gráfica de Préstamos por Mes
+        const prestamosCtx = document.getElementById('prestamosChart').getContext('2d');
+        new Chart(prestamosCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Préstamos',
+                    data: [12, 19, 15, 25, 22, 30, 28, 35, 32, 40, 38, 45],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfica de Tipos de Material
+        const materialesCtx = document.getElementById('materialesChart').getContext('2d');
+        new Chart(materialesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Libros', 'Artículos Especiales'],
+                datasets: [{
+                    data: [75, 25],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 205, 86, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 205, 86, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Gráfica de Lectores por Estado
+        const lectoresCtx = document.getElementById('lectoresChart').getContext('2d');
+        new Chart(lectoresCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Activos', 'Suspendidos', 'Inactivos'],
+                datasets: [{
+                    label: 'Cantidad de Lectores',
+                    data: [120, 15, 15],
+                    backgroundColor: [
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(40, 167, 69, 1)',
+                        'rgba(220, 53, 69, 1)',
+                        'rgba(108, 117, 125, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <% } %>
 </body>
 </html>
 

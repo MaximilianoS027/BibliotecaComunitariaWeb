@@ -48,15 +48,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="home.jsp">Inicio</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="ListarLibros">Libros</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="ListarArticulosEspeciales">Artículos Especiales</a>
-                    </li>
                     <% if ("BIBLIOTECARIO".equals(rol)) { %>
                     <li class="nav-item">
-                        <a class="nav-link" href="AgregarArticuloEspecial">Agregar Artículo Especial</a>
+                        <a class="nav-link" href="ListarLectores">Lectores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ListarLibros">Materiales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarPrestamos">Préstamos</a>
+                    </li>
+                    <% } else { %>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ListarArticulosEspeciales">Catálogo</a>
                     </li>
                     <% } %>
                 </ul>
