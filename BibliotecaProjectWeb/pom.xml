@@ -169,8 +169,7 @@
                         </configuration>
                     </execution>
                     
-                    <!-- Artículo Especial - DESHABILITADO: servicio no disponible en backend -->
-                    <!--
+                    <!-- Artículo Especial -->
                     <execution>
                         <id>wsimport-articuloespecial</id>
                         <goals>
@@ -187,7 +186,6 @@
                             <extension>true</extension>
                         </configuration>
                     </execution>
-                    -->
                     
                     <!-- Préstamo -->
                     <execution>

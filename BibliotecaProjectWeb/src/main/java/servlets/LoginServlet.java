@@ -39,12 +39,68 @@ public class LoginServlet extends HttpServlet {
         try {
             System.out.println("=== LOGIN ATTEMPT ===");
             System.out.println("Email: " + email);
-            System.out.println("Rol: " + rol);
+            System.out.println("Rol especificado: " + rol);
             System.out.println("Password: " + (password != null ? "***" : "null"));
             
             String usuarioId = null;
             
-            if ("lector".equals(rol)) {
+            // Si no se especifica rol, intentar ambos (primero bibliotecario, luego lector)
+            if (rol == null || rol.trim().isEmpty()) {
+                System.out.println("No se especificó rol, intentando con ambos...");
+                
+                // Intentar primero como bibliotecario
+                try {
+                    usuarioId = autenticacionWS.autenticarBibliotecario(email, password);
+                    if (usuarioId != null && !usuarioId.isEmpty()) {
+                        HttpSession session = request.getSession();
+                        session.setAttribute("usuarioId", usuarioId);
+                        session.setAttribute("usuarioEmail", email);
+                        session.setAttribute("rol", "BIBLIOTECARIO");
+                        session.setMaxInactiveInterval(30 * 60);
+                        
+                        // Verificar si hay una URL de redirección guardada
+                        String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                        session.removeAttribute("redirectAfterLogin");
+                        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                            response.sendRedirect(redirectUrl);
+                        } else {
+                            response.sendRedirect("home.jsp");
+                        }
+                        return;
+                    }
+                } catch (Exception e) {
+                    System.out.println("No es bibliotecario, intentando como lector...");
+                }
+                
+                // Si no es bibliotecario, intentar como lector
+                try {
+                    usuarioId = autenticacionWS.autenticarLector(email, password);
+                    if (usuarioId != null && !usuarioId.isEmpty()) {
+                        HttpSession session = request.getSession();
+                        session.setAttribute("usuarioId", usuarioId);
+                        session.setAttribute("usuarioEmail", email);
+                        session.setAttribute("rol", "LECTOR");
+                        session.setMaxInactiveInterval(30 * 60);
+                        
+                        // Verificar si hay una URL de redirección guardada
+                        String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                        session.removeAttribute("redirectAfterLogin");
+                        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                            response.sendRedirect(redirectUrl);
+                        } else {
+                            response.sendRedirect("home.jsp");
+                        }
+                        return;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Tampoco es lector");
+                }
+                
+                // Si llegamos aquí, las credenciales son inválidas
+                response.sendRedirect("login.jsp?error=invalid");
+                return;
+                
+            } else if ("lector".equals(rol)) {
                 // Autenticar lector usando Web Service
                 System.out.println("Intentando autenticar lector...");
                 usuarioId = autenticacionWS.autenticarLector(email, password);
@@ -58,8 +114,14 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("rol", "LECTOR");
                     session.setMaxInactiveInterval(30 * 60); // 30 minutos
                     
-                    // Redirigir a home
+                    // Verificar si hay una URL de redirección guardada
+                    String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                    session.removeAttribute("redirectAfterLogin");
+                    if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                        response.sendRedirect(redirectUrl);
+                    } else {
                     response.sendRedirect("home.jsp");
+                    }
                     return;
                 }
                 
@@ -77,8 +139,14 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute("rol", "BIBLIOTECARIO");
                     session.setMaxInactiveInterval(30 * 60); // 30 minutos
                     
-                    // Redirigir a home
+                    // Verificar si hay una URL de redirección guardada
+                    String redirectUrl = (String) session.getAttribute("redirectAfterLogin");
+                    session.removeAttribute("redirectAfterLogin");
+                    if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                        response.sendRedirect(redirectUrl);
+                    } else {
                     response.sendRedirect("home.jsp");
+                    }
                     return;
                 }
             }

@@ -1,4 +1,28 @@
 /* ===================================
+   Corrección del Menú Dropdown
+   =================================== */
+.navbar .dropdown-menu {
+    z-index: 1050 !important;
+    position: absolute !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.navbar-nav .dropdown-menu {
+    z-index: 1050 !important;
+}
+
+/* Reducir z-index del cartel de bienvenida */
+.alert {
+    z-index: 1;
+    position: relative;
+}
+
+/* Asegurar que el navbar tenga el z-index correcto */
+.navbar {
+    z-index: 1040;
+}
+
+/* ===================================
    Estilos Generales
    =================================== */
 * {

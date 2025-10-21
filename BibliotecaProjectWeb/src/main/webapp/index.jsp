@@ -150,7 +150,7 @@
                         </div>
                         <h5 class="card-title">Catálogo</h5>
                         <p class="card-text">Explora nuestra colección de libros y artículos especiales.</p>
-                        <a href="catalogo.jsp" class="btn btn-info text-white">Ver Catálogo</a>
+                        <a href="ListarMateriales" class="btn btn-info text-white">Ver Catálogo</a>
                     </div>
                 </div>
             </div>

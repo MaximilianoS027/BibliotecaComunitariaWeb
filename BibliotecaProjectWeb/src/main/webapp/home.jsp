@@ -39,12 +39,12 @@
                         <a class="nav-link active" href="home.jsp">Inicio</a>
                     </li>
                     <% if ("LECTOR".equals(rol)) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="catalogo.jsp">Catálogo</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="misPrestamos.jsp">Mis Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarLibros">Catálogo</a>
+                    </li>
                     <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
                         <li class="nav-item">
                             <a class="nav-link" href="gestionLectores.jsp">Lectores</a>
@@ -78,7 +78,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert">
+                <div class="alert alert-<%= "BIBLIOTECARIO".equals(rol) ? "success" : "primary" %>" role="alert" style="z-index: 1; position: relative;">
                     <h4 class="alert-heading">¡Bienvenido, <%= email %>!</h4>
                     <p>Has iniciado sesión como <strong><%= rol %></strong></p>
                     <hr>
@@ -102,12 +102,23 @@
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
-                        <h5 class="card-title">🔍 Catálogo</h5>
-                        <p class="card-text">Explora nuestra colección de materiales</p>
-                        <a href="catalogo.jsp" class="btn btn-info text-white">Ver Catálogo</a>
+                        <h5 class="card-title">📚 Catálogo</h5>
+                        <p class="card-text">Explora nuestra colección completa</p>
+                        <a href="ListarMateriales" class="btn btn-info text-white">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">🎁 Artículos Especiales</h5>
+                        <p class="card-text">Explora artículos especiales disponibles</p>
+                        <a href="ListarArticulosEspeciales" class="btn btn-warning text-white">Ver Artículos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
@@ -130,12 +141,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <h5 class="card-title">📚 Materiales</h5>
-                        <p class="card-text">Registrar donaciones y materiales</p>
-                        <a href="gestionMateriales.jsp" class="btn btn-success">Gestionar</a>
+                        <p class="card-text">Gestionar libros y artículos especiales</p>
+                        <a href="ListarLibros" class="btn btn-success">Ver Catálogo</a>
                     </div>
                 </div>
             </div>
@@ -148,6 +159,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row mt-3">
             <div class="col-md-3">
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
