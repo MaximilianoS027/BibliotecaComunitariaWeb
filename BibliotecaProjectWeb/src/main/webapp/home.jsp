@@ -53,7 +53,7 @@
                             <a class="nav-link" href="ListarLectores">Lectores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="ListarLibros">Materiales</a>
+                            <a class="nav-link" href="ListarMateriales">Materiales</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="ListarPrestamos">Préstamos</a>
@@ -149,7 +149,7 @@
                         </div>
                         <h5 class="card-title">📚 Materiales</h5>
                         <p class="card-text flex-grow-1">Administrar catálogo de libros y artículos especiales, agregar nuevos materiales</p>
-                        <a href="ListarLibros" class="btn btn-info btn-lg w-100 mt-auto text-white">Gestionar Materiales</a>
+                        <a href="ListarMateriales" class="btn btn-info btn-lg w-100 mt-auto text-white">Gestionar Materiales</a>
                     </div>
                 </div>
             </div>

@@ -98,6 +98,16 @@
                         <h2>📖 Catálogo de Materiales</h2>
                         <p class="text-muted">Explora nuestra colección completa</p>
                     </div>
+                    <% if ("BIBLIOTECARIO".equals(rol)) { %>
+                    <div class="d-flex gap-2">
+                        <a href="AgregarLibro" class="btn btn-success">
+                            ➕ Agregar Libro
+                        </a>
+                        <a href="AgregarArticuloEspecial" class="btn btn-info text-white">
+                            ➕ Agregar Artículo Especial
+                        </a>
+                    </div>
+                    <% } %>
                 </div>
             </div>
         </div>

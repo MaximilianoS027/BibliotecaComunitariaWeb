@@ -58,7 +58,7 @@
                         <a class="nav-link active" href="ListarLectores">Lectores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ListarLibros">Materiales</a>
+                        <a class="nav-link" href="ListarMateriales">Materiales</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="ListarPrestamos">Préstamos</a>
@@ -85,28 +85,17 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h2>👥 Gestión de Lectores</h2>
-                        <p class="text-light">Administra los lectores del sistema</p>
-                    </div>
-                    <div>
-                        <a href="RegistroLector" class="btn btn-success">
-                            ➕ Registrar Nuevo Lector
-                        </a>
+                <div class="mb-3">
+                    <h2>👥 Gestión de Lectores</h2>
+                    <p class="text-light">Administra los lectores del sistema</p>
+                    <div class="alert alert-info" role="alert">
+                        <small>ℹ️ Los registros de nuevos lectores se realizan únicamente desde el sistema de administración (backend).</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Mensajes de feedback -->
-        <% if ("registro".equals(success)) { %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>¡Éxito!</strong> El lector ha sido registrado correctamente.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <% } %>
-        
         <% if (error != null) { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> <%= error %>
