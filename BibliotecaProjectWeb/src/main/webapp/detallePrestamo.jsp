@@ -69,6 +69,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="ListarLibros">Materiales</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ListarPrestamos">Préstamos</a>
+                    </li>
                     <% } %>
                 </ul>
                 <ul class="navbar-nav">

@@ -60,7 +60,10 @@
                     </li>
                     <% } else { %>
                     <li class="nav-item">
-                        <a class="nav-link active" href="ListarArticulosEspeciales">Catálogo</a>
+                        <a class="nav-link" href="MisPrestamos">Mis Préstamos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="ListarMateriales">Catálogo</a>
                     </li>
                     <% } %>
                 </ul>
