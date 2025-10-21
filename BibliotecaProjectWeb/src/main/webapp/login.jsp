@@ -114,15 +114,12 @@
                         </div>
                     </form>
                     
-                    <hr class="my-4">
-                    
-                    <div class="text-center">
-                        <p class="text-muted">¿No tienes cuenta?</p>
-                        <a href="registro.jsp" class="btn btn-outline-secondary">Registrarse</a>
+                    <div class="text-center mt-4">
+                        <a href="index.jsp" class="text-muted">← Volver al inicio</a>
                     </div>
                     
-                    <div class="text-center mt-3">
-                        <a href="index.jsp" class="text-muted">← Volver al inicio</a>
+                    <div class="alert alert-info mt-3" role="alert">
+                        <small>ℹ️ Los registros de usuarios se realizan únicamente desde el sistema de administración.</small>
                     </div>
                 </div>
             </div>
