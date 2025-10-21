@@ -164,7 +164,7 @@
                                     <% for (DtLibro libro : libros) { %>
                                     <tr>
                                         <td><code><%= libro.getId() %></code></td>
-                                        <td><strong><%= libro.getTitulo() %></strong></td>
+                                        <td><strong><%= new String(libro.getTitulo().getBytes("ISO-8859-1"), "UTF-8") %></strong></td>
                                         <td class="text-center">
                                             <span class="badge bg-info"><%= libro.getCantidadPaginas() %></span>
                                         </td>
@@ -175,6 +175,10 @@
                                                 if (fechaObj != null) {
                                                     String fechaStr = "";
                                                     String fechaString = fechaObj.toString();
+                                                    
+                                                    // Debug: mostrar información de la fecha
+                                                    System.out.println("Fecha original: " + fechaString);
+                                                    System.out.println("Tipo: " + fechaObj.getClass().getName());
                                                     
                                                     // Si contiene formato ISO con T, extraer solo la fecha
                                                     if (fechaString.contains("T")) {
@@ -187,6 +191,14 @@
                                                         } else {
                                                             fechaStr = soloFecha;
                                                         }
+                                                    } else if (fechaString.contains("-")) {
+                                                        // Formato yyyy-MM-dd
+                                                        String[] partes = fechaString.split("-");
+                                                        if (partes.length == 3) {
+                                                            fechaStr = partes[2] + "/" + partes[1] + "/" + partes[0];
+                                                        } else {
+                                                            fechaStr = fechaString;
+                                                        }
                                                     } else {
                                                         // Intentar formatear como fecha normal
                                                         try {
@@ -196,6 +208,8 @@
                                                             fechaStr = fechaString;
                                                         }
                                                     }
+                                                    
+                                                    System.out.println("Fecha formateada: " + fechaStr);
                                             %>
                                                 <span class="badge bg-success"><%= fechaStr %></span>
                                             <% 
@@ -208,6 +222,7 @@
                                                 // Mostrar información de debug
                                                 System.out.println("Error al formatear fecha: " + e.getMessage());
                                                 System.out.println("Tipo de fecha: " + (libro.getFechaRegistro() != null ? libro.getFechaRegistro().getClass().getName() : "null"));
+                                                e.printStackTrace();
                                             %>
                                                 <span class="badge bg-warning" title="Error: <%= e.getMessage() %>">Error</span>
                                             <%

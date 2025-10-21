@@ -772,6 +772,19 @@ body {
     border: 1px solid var(--border-color);
 }
 
+/* Mejorar contraste de textos dentro de tarjetas (detalles de préstamo) */
+.card .form-control-plaintext,
+.card .form-label,
+.card p,
+.card code {
+    color: var(--text-primary) !important;
+}
+
+/* Asegurar contraste legible en badges grises */
+.badge.bg-secondary {
+    color: #fff !important;
+}
+
 .card-title {
     color: var(--text-primary);
 }
@@ -828,6 +841,74 @@ body {
 
 .theme-toggle:hover span {
     transform: rotate(180deg);
+}
+
+/* ===================================
+   Estilos para Formulario de Préstamos
+   =================================== */
+.material-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.material-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.material-card .card-title {
+    color: #667eea !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+}
+
+.material-card .card-text {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.material-card .card-text strong {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600;
+}
+
+.material-card .form-check-input:checked + .form-check-label .card-title {
+    color: #4CAF50 !important;
+}
+
+.material-card .form-check-input:checked + .form-check-label .card-text {
+    color: rgba(76, 175, 80, 0.9) !important;
+}
+
+.material-card .form-check-input:checked + .form-check-label .card-text strong {
+    color: #4CAF50 !important;
+}
+
+/* Mejorar contraste en tabs */
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid transparent;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-tabs .nav-link.active {
+    color: #333 !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    font-weight: 600;
 }
 
 /* ===================================
