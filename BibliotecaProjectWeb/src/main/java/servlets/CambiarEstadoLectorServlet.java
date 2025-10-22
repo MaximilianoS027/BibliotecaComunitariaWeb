@@ -114,8 +114,10 @@ public class CambiarEstadoLectorServlet extends HttpServlet {
             
             lectorWS.cambiarEstadoLector(lectorId, nuevoEstado);
             
-            // Redirigir con mensaje de éxito
-            response.sendRedirect("ConsultarLector?id=" + lectorId + "&success=estado_cambiado");
+            System.out.println("✅ Estado cambiado exitosamente a: " + nuevoEstado);
+            
+            // Redirigir con mensaje de éxito y timestamp para evitar caché
+            response.sendRedirect("ConsultarLector?id=" + lectorId + "&success=estado_cambiado&t=" + System.currentTimeMillis());
             
         } catch (LectorNoExisteException_Exception e) {
             System.out.println("Error: Lector no existe - " + e.getMessage());

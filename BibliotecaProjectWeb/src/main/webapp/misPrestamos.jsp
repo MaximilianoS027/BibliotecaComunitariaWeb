@@ -128,11 +128,9 @@
                                 <div class="col-md-6">
                                     <select class="form-select" name="estado" onchange="this.form.submit()">
                                         <option value="">Todos los estados</option>
-                                        <option value="Solicitado" <%= "Solicitado".equals(filtroEstado) ? "selected" : "" %>>Solicitados</option>
-                                        <option value="Aprobado" <%= "Aprobado".equals(filtroEstado) ? "selected" : "" %>>Aprobados</option>
-                                        <option value="En Uso" <%= "En Uso".equals(filtroEstado) ? "selected" : "" %>>En Uso</option>
-                                        <option value="Devuelto" <%= "Devuelto".equals(filtroEstado) ? "selected" : "" %>>Devueltos</option>
-                                        <option value="Rechazado" <%= "Rechazado".equals(filtroEstado) ? "selected" : "" %>>Rechazados</option>
+                                        <option value="PENDIENTE" <%= "PENDIENTE".equals(filtroEstado) ? "selected" : "" %>>Pendientes</option>
+                                        <option value="EN_CURSO" <%= "EN_CURSO".equals(filtroEstado) ? "selected" : "" %>>En Curso</option>
+                                        <option value="DEVUELTO" <%= "DEVUELTO".equals(filtroEstado) ? "selected" : "" %>>Devueltos</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">

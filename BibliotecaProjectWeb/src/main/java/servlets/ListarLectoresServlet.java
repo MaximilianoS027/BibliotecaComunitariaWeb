@@ -71,8 +71,15 @@ public class ListarLectoresServlet extends HttpServlet {
             
             if (idsLectores != null && idsLectores.length > 0) {
                 // Obtener detalles de cada lector
-                for (String id : idsLectores) {
+                for (String item : idsLectores) {
                     try {
+                        // Extraer solo el ID de la cadena (formato: "ID - nombre (email)")
+                        String id = item;
+                        if (item.contains(" - ")) {
+                            String[] parts = item.split(" - ");
+                            id = parts[0].trim();
+                        }
+                        
                         System.out.println("Obteniendo lector con ID: " + id);
                         DtLector lector = lectorWS.obtenerLector(id);
                         if (lector != null) {
@@ -80,8 +87,8 @@ public class ListarLectoresServlet extends HttpServlet {
                             System.out.println("Lector agregado: " + lector.getNombre());
                         }
                     } catch (Exception e) {
-                        System.out.println("Error al obtener lector " + id + ": " + e.getMessage());
-                        e.printStackTrace();
+                        System.out.println("Error al obtener lector " + item + ": " + e.getMessage());
+                        // Continuar con el siguiente lector en caso de error
                     }
                 }
             }

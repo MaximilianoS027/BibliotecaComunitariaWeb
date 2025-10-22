@@ -114,8 +114,10 @@ public class CambiarZonaLectorServlet extends HttpServlet {
             
             lectorWS.cambiarZonaLector(lectorId, nuevaZona);
             
-            // Redirigir con mensaje de éxito
-            response.sendRedirect("ConsultarLector?id=" + lectorId + "&success=zona_cambiada");
+            System.out.println("✅ Zona cambiada exitosamente a: " + nuevaZona);
+            
+            // Redirigir con mensaje de éxito y timestamp para evitar caché
+            response.sendRedirect("ConsultarLector?id=" + lectorId + "&success=zona_cambiada&t=" + System.currentTimeMillis());
             
         } catch (LectorNoExisteException_Exception e) {
             System.out.println("Error: Lector no existe - " + e.getMessage());

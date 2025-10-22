@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="publicadores.lector.DtLector" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="javax.xml.datatype.XMLGregorianCalendar" %>
 <%
     // Verificar que el usuario esté autenticado
     HttpSession userSession = request.getSession(false);
@@ -27,6 +28,25 @@
     
     String success = request.getParameter("success");
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
+<%!
+    // Método helper para formatear fechas XMLGregorianCalendar
+    private String formatearFecha(XMLGregorianCalendar xmlCalendar) {
+        if (xmlCalendar == null) return "N/A";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            return sdf.format(xmlCalendar.toGregorianCalendar().getTime());
+        } catch (Exception e) {
+            return "N/A";
+        }
+    }
+    
+    // Método helper para formatear zonas
+    private String formatearZona(String zona) {
+        if (zona == null || zona.isEmpty()) return "N/A";
+        // El backend ya devuelve las zonas con el formato correcto
+        return zona;
+    }
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -142,7 +162,10 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Estado:</label>
                                     <p class="form-control-plaintext">
-                                        <% if ("Activo".equals(lector.getEstado().toString())) { %>
+                                        <% 
+                                        String estadoStr = lector.getEstado().toString().toUpperCase();
+                                        if ("ACTIVO".equals(estadoStr)) { 
+                                        %>
                                             <span class="badge bg-success fs-6">Activo</span>
                                         <% } else { %>
                                             <span class="badge bg-warning fs-6">Suspendido</span>
@@ -172,7 +195,7 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Zona Asignada:</label>
                                     <p class="form-control-plaintext">
-                                        <span class="badge bg-info fs-6"><%= lector.getZona() %></span>
+                                        <span class="badge bg-info fs-6"><%= formatearZona(lector.getZona().toString()) %></span>
                                     </p>
                                 </div>
                             </div>
@@ -180,18 +203,7 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Fecha de Registro:</label>
                                     <p class="form-control-plaintext">
-                                        <% 
-                                        try {
-                                            String fechaStr = sdf.format(lector.getFechaRegistro());
-                                        %>
-                                            <span class="badge bg-secondary fs-6"><%= fechaStr %></span>
-                                        <% 
-                                        } catch (Exception e) {
-                                        %>
-                                            <span class="badge bg-warning fs-6">Error al mostrar fecha</span>
-                                        <% 
-                                        }
-                                        %>
+                                        <span class="badge bg-secondary fs-6"><%= formatearFecha(lector.getFechaRegistro()) %></span>
                                     </p>
                                 </div>
                             </div>
@@ -229,7 +241,10 @@
                         <div class="text-center">
                             <small class="text-muted">
                                 <strong>Estado actual:</strong><br>
-                                <% if ("Activo".equals(lector.getEstado().toString())) { %>
+                                <% 
+                                String estadoActual = lector.getEstado().toString().toUpperCase();
+                                if ("ACTIVO".equals(estadoActual)) { 
+                                %>
                                     <span class="text-success">✅ Activo</span>
                                 <% } else { %>
                                     <span class="text-warning">⚠️ Suspendido</span>
@@ -246,20 +261,8 @@
                     </div>
                     <div class="card-body">
                         <small class="text-muted">
-                            <strong>Zona:</strong> <%= lector.getZona() %><br>
-                            <strong>Registrado:</strong> 
-                            <% 
-                            try {
-                                String fechaStr = sdf.format(lector.getFechaRegistro());
-                            %>
-                                <%= fechaStr %>
-                            <% 
-                            } catch (Exception e) {
-                            %>
-                                Fecha no disponible
-                            <% 
-                            }
-                            %>
+                            <strong>Zona:</strong> <%= formatearZona(lector.getZona().toString()) %><br>
+                            <strong>Registrado:</strong> <%= formatearFecha(lector.getFechaRegistro()) %>
                         </small>
                     </div>
                 </div>

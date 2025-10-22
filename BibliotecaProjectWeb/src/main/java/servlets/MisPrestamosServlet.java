@@ -53,6 +53,7 @@ public class MisPrestamosServlet extends HttpServlet {
             
             // Obtener filtro de estado si existe
             String filtroEstado = request.getParameter("estado");
+            System.out.println("Filtro de estado recibido: " + filtroEstado);
             
             // Obtener IDs de préstamos del lector
             StringArray prestamosArray = prestamoWS.listarPrestamosPorLector(lectorId);
@@ -78,11 +79,14 @@ public class MisPrestamosServlet extends HttpServlet {
                         System.out.println("ID extraído: " + idSolo);
                         DtPrestamo prestamo = prestamoWS.obtenerPrestamo(idSolo);
                         if (prestamo != null) {
+                            System.out.println("Préstamo " + prestamo.getId() + " estado: " + prestamo.getEstado());
                             // Aplicar filtro de estado si existe
                             if (filtroEstado == null || filtroEstado.trim().isEmpty() || 
                                 filtroEstado.equals(prestamo.getEstado())) {
                                 prestamos.add(prestamo);
-                                System.out.println("Préstamo agregado: " + prestamo.getId());
+                                System.out.println("✅ Préstamo agregado: " + prestamo.getId() + " (estado: " + prestamo.getEstado() + ")");
+                            } else {
+                                System.out.println("❌ Préstamo filtrado: " + prestamo.getId() + " (estado: " + prestamo.getEstado() + " != filtro: " + filtroEstado + ")");
                             }
                         }
                     } catch (PrestamoNoExisteException_Exception e) {

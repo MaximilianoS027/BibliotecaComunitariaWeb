@@ -54,9 +54,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="ListarPrestamos">Préstamos</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="TrazabilidadInventario">📊 Trazabilidad</a>
-                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
