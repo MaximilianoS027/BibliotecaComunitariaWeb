@@ -44,6 +44,11 @@ public class ListarPrestamosServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        // CONFIGURAR CODIFICACIÓN UTF-8
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        
         // Verificar sesión y rol
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuarioId") == null) {
@@ -140,15 +145,25 @@ public class ListarPrestamosServlet extends HttpServlet {
                     break;
                     
                 case "materiales":
-                    // Identificar materiales con muchos préstamos pendientes
-                    // Aquí mostraremos todos los préstamos pero luego agruparemos por material en el JSP
+                    // Identificar materiales con muchos préstamos activos
+                    System.out.println("=== VISTA MATERIALES MÁS PRESTADOS ===");
+                    System.out.println("Total de préstamos en el sistema: " + todosPrestamos.size());
+                    
                     prestamosFiltrados = new ArrayList<>();
                     for (DtPrestamo p : todosPrestamos) {
-                        // Solo préstamos pendientes (EN_CURSO)
-                        if ("EN_CURSO".equals(p.getEstado())) {
+                        // Préstamos activos: cualquier estado excepto DEVUELTO
+                        String estado = p.getEstado();
+                        System.out.println("Evaluando préstamo " + p.getId() + " - Estado: '" + estado + "'");
+                        
+                        if (!"DEVUELTO".equalsIgnoreCase(estado) && !"Devuelto".equals(estado)) {
                             prestamosFiltrados.add(p);
+                            System.out.println("  ✓ Préstamo " + p.getId() + " agregado (estado: " + estado + ")");
+                        } else {
+                            System.out.println("  ✗ Préstamo " + p.getId() + " omitido (devuelto)");
                         }
                     }
+                    
+                    System.out.println("DEBUG: Total de préstamos activos encontrados: " + prestamosFiltrados.size());
                     
                     // Contar préstamos por material
                     Map<String, Integer> prestamosporMaterial = new HashMap<>();
@@ -156,9 +171,31 @@ public class ListarPrestamosServlet extends HttpServlet {
                         String materialId = p.getMaterialId();
                         prestamosporMaterial.put(materialId, 
                             prestamosporMaterial.getOrDefault(materialId, 0) + 1);
+                        System.out.println("  Material " + materialId + " ahora tiene " + 
+                            prestamosporMaterial.get(materialId) + " préstamos");
                     }
+                    
+                    System.out.println("DEBUG: prestamosporMaterial.size() = " + prestamosporMaterial.size());
+                    for (Map.Entry<String, Integer> entry : prestamosporMaterial.entrySet()) {
+                        System.out.println("  - Material: " + entry.getKey() + " -> " + entry.getValue() + " préstamos");
+                    }
+                    
+                    // Filtrar solo materiales con 2 o más préstamos
+                    Map<String, Integer> materialesConMultiplesPrestamos = new HashMap<>();
+                    for (Map.Entry<String, Integer> entry : prestamosporMaterial.entrySet()) {
+                        if (entry.getValue() >= 2) {
+                            materialesConMultiplesPrestamos.put(entry.getKey(), entry.getValue());
+                            System.out.println("  ✓ Material " + entry.getKey() + " tiene " + entry.getValue() + " préstamos (incluido)");
+                        } else {
+                            System.out.println("  ✗ Material " + entry.getKey() + " tiene solo " + entry.getValue() + " préstamo (excluido)");
+                        }
+                    }
+                    
+                    System.out.println("DEBUG: Materiales con 2+ préstamos: " + materialesConMultiplesPrestamos.size());
+                    
                     request.setAttribute("prestamosPorMaterial", prestamosporMaterial);
-                    System.out.println("Préstamos pendientes por material calculados");
+                    request.setAttribute("materialesMultiples", materialesConMultiplesPrestamos);
+                    System.out.println("Préstamos activos por material calculados");
                     break;
                     
                 default: // "todos"

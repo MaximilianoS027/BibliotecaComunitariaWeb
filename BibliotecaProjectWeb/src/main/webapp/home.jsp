@@ -26,6 +26,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/theme-fixes.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -68,6 +69,12 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="perfil.jsp">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="#" id="themeToggle">
+                                    <span id="themeIcon">🌙</span> <span id="themeText">Modo Oscuro</span>
+                                </a>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="Logout" onclick="return confirm('¿Cerrar sesión?')">Cerrar Sesión</a></li>
                         </ul>
@@ -368,6 +375,9 @@
         });
     </script>
     <% } %>
+    
+    <!-- Script para Toggle de Tema Claro/Oscuro -->
+    <script src="assets/js/theme-toggle.js"></script>
 </body>
 </html>
 

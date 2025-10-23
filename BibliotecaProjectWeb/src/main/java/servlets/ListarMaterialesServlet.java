@@ -51,6 +51,11 @@ public class ListarMaterialesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        // CONFIGURAR CODIFICACIÓN UTF-8
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        
         // Verificar sesión
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuarioId") == null) {

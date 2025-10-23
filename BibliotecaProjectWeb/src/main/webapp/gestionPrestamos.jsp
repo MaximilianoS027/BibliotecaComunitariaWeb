@@ -2,6 +2,7 @@
 <%@ page import="publicadores.prestamo.DtPrestamo" %>
 <%@ page import="publicadores.bibliotecario.DtBibliotecario" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.text.SimpleDateFormat" %>
@@ -58,14 +59,41 @@
 %>
 <%!
     // Método helper para formatear fechas
-    private String formatearFecha(XMLGregorianCalendar xmlCalendar) {
-        if (xmlCalendar == null) return "N/A";
+    private String formatearFecha(Object fechaObj) {
+        if (fechaObj == null) return "N/A";
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            return sdf.format(xmlCalendar.toGregorianCalendar().getTime());
+            if (fechaObj instanceof javax.xml.datatype.XMLGregorianCalendar) {
+                // Manejar XMLGregorianCalendar
+                javax.xml.datatype.XMLGregorianCalendar xmlCal = 
+                    (javax.xml.datatype.XMLGregorianCalendar) fechaObj;
+                return sdf.format(xmlCal.toGregorianCalendar().getTime());
+            } else if (fechaObj instanceof java.util.Date) {
+                // Manejar java.util.Date
+                return sdf.format((java.util.Date) fechaObj);
+            } else {
+                // Manejar otros formatos (String, etc.)
+                String f = fechaObj.toString();
+                if (f.contains("T")) {
+                    // Formato ISO: 2025-10-21T10:30:00
+                    String[] p = f.split("T")[0].split("-");
+                    if (p.length == 3) return p[2]+"/"+p[1]+"/"+p[0];
+                } else if (f.contains("-")) {
+                    // Formato yyyy-MM-dd
+                    String[] p = f.split("-");
+                    if (p.length == 3) return p[2]+"/"+p[1]+"/"+p[0];
+                } else if (f.contains("/")) {
+                    // Formato dd/MM/yyyy o MM/dd/yyyy
+                    return f;
+                } else {
+                    // Otros formatos
+                    return f;
+                }
+            }
         } catch (Exception e) {
             return "N/A";
         }
+        return "N/A";
     }
     
     // Método helper para obtener badge de estado
@@ -232,38 +260,34 @@
         <!-- Tabs Navigation -->
         <ul class="nav nav-tabs mb-4" id="prestamosTabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%= "todos".equals(vistaActiva) ? "active" : "" %>" 
-                        id="todos-tab" data-bs-toggle="tab" 
-                        data-bs-target="#todos" type="button" role="tab">
+                <a class="nav-link <%= vistaActiva == null || "todos".equals(vistaActiva) ? "active" : "" %>" 
+                   href="ListarPrestamos?vista=todos">
                     📋 Todos los Préstamos
-                </button>
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%= "historial".equals(vistaActiva) ? "active" : "" %>" 
-                        id="historial-tab" data-bs-toggle="tab" 
-                        data-bs-target="#historial" type="button" role="tab">
+                <a class="nav-link <%= "historial".equals(vistaActiva) ? "active" : "" %>" 
+                   href="ListarPrestamos?vista=historial">
                     👤 Historial por Bibliotecario
-                </button>
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%= "zona".equals(vistaActiva) ? "active" : "" %>" 
-                        id="zona-tab" data-bs-toggle="tab" 
-                        data-bs-target="#zona" type="button" role="tab">
+                <a class="nav-link <%= "zona".equals(vistaActiva) ? "active" : "" %>" 
+                   href="ListarPrestamos?vista=zona">
                     🗺️ Reporte por Zona
-                </button>
+                </a>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link <%= "materiales".equals(vistaActiva) ? "active" : "" %>" 
-                        id="materiales-tab" data-bs-toggle="tab" 
-                        data-bs-target="#materiales" type="button" role="tab">
+                <a class="nav-link <%= "materiales".equals(vistaActiva) ? "active" : "" %>" 
+                   href="ListarPrestamos?vista=materiales">
                     📚 Materiales más Prestados
-                </button>
+                </a>
             </li>
         </ul>
 
         <div class="tab-content" id="prestamosTabContent">
             <!-- TAB 1: TODOS LOS PRÉSTAMOS -->
-            <div class="tab-pane fade <%= "todos".equals(vistaActiva) ? "show active" : "" %>" 
+            <div class="tab-pane fade <%= (vistaActiva == null || "todos".equals(vistaActiva)) ? "show active" : "" %>" 
                  id="todos" role="tabpanel">
                 
                 <!-- Filtro por estado -->
@@ -562,46 +586,71 @@
                     </div>
                 </div>
 
-                <!-- Lista de materiales con préstamos pendientes -->
+                <!-- Lista de materiales con múltiples préstamos activos -->
+                <%
+                @SuppressWarnings("unchecked")
+                Map<String, Integer> materialesMultiples = (Map<String, Integer>) request.getAttribute("materialesMultiples");
+                if (materialesMultiples == null) materialesMultiples = new HashMap<>();
+                %>
+                
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <% if (prestamosPorMaterial != null && !prestamosPorMaterial.isEmpty()) { %>
-                        <h5>Materiales con Préstamos Pendientes</h5>
+                        <% if (materialesMultiples != null && !materialesMultiples.isEmpty()) { %>
+                        <h5>📊 Materiales con Alta Demanda (2+ Préstamos)</h5>
+                        <p class="text-muted">Materiales que tienen 2 o más préstamos activos simultáneamente</p>
                         <hr>
                         <div class="table-responsive">
                             <table class="table table-hover">
-                                <thead class="table-warning">
+                                <thead class="table-info">
                                     <tr>
-                                        <th>Material ID</th>
-                                        <th class="text-center">Préstamos Pendientes</th>
-                                        <th class="text-center">Acciones</th>
+                                        <th style="width: 15%;">ID</th>
+                                        <th style="width: 40%;">Material</th>
+                                        <th class="text-center" style="width: 20%;">Préstamos Activos</th>
+                                        <th class="text-center" style="width: 25%;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% 
                                     // Ordenar materiales por cantidad de préstamos (descendente)
-                                    List<Map.Entry<String, Integer>> sortedList = new java.util.ArrayList<>(prestamosPorMaterial.entrySet());
+                                    List<Map.Entry<String, Integer>> sortedList = new ArrayList<>(materialesMultiples.entrySet());
                                     sortedList.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
                                     
                                     for (Map.Entry<String, Integer> entry : sortedList) { 
                                         String materialId = entry.getKey();
                                         int cantidad = entry.getValue();
                                         
+                                        // Obtener el nombre del material desde los préstamos
+                                        String nombreMaterial = materialId;
+                                        if (prestamos != null) {
+                                            for (DtPrestamo p : prestamos) {
+                                                if (p.getMaterialId().equals(materialId) && p.getMaterialDescripcion() != null) {
+                                                    try {
+                                                        nombreMaterial = new String(p.getMaterialDescripcion().getBytes("ISO-8859-1"), "UTF-8");
+                                                    } catch (Exception e) {
+                                                        nombreMaterial = p.getMaterialDescripcion();
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        
                                         // Determinar el color del badge según la cantidad
                                         String badgeColor = cantidad >= 5 ? "bg-danger" : 
-                                                           cantidad >= 3 ? "bg-warning text-dark" : "bg-info";
+                                                           cantidad >= 3 ? "bg-warning text-dark" : "bg-info text-white";
                                     %>
                                     <tr>
-                                        <td><code><%= materialId %></code></td>
+                                        <td><code class="text-dark"><%= materialId %></code></td>
+                                        <td><strong><%= nombreMaterial %></strong></td>
                                         <td class="text-center">
                                             <span class="badge <%= badgeColor %> fs-6">
-                                                <%= cantidad %> préstamo<%= cantidad != 1 ? "s" : "" %>
+                                                <%= cantidad %> préstamos
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <a href="ListarPrestamos?vista=todos&materialFilter=<%= materialId %>" 
-                                               class="btn btn-sm btn-primary">
-                                                Ver Préstamos
+                                            <a href="#detalle-<%= materialId %>" 
+                                               class="btn btn-sm btn-primary"
+                                               onclick="document.getElementById('detalle-<%= materialId %>').scrollIntoView({behavior: 'smooth'});">
+                                                👁️ Ver Detalles
                                             </a>
                                         </td>
                                     </tr>
@@ -611,40 +660,79 @@
                         </div>
                         <% } else { %>
                         <div class="alert alert-success text-center">
-                            ✅ ¡Excelente! No hay materiales con préstamos pendientes en este momento.
+                            ✅ ¡Excelente! No hay materiales con múltiples préstamos activos simultáneamente.
                         </div>
                         <% } %>
                     </div>
                 </div>
 
-                <!-- Detalle de préstamos pendientes -->
-                <% if (prestamos != null && !prestamos.isEmpty()) { %>
-                <div class="card shadow-sm mt-4">
+                <!-- Detalle de préstamos agrupados por material -->
+                <% 
+                if (prestamos != null && !prestamos.isEmpty() && materialesMultiples != null && !materialesMultiples.isEmpty()) {
+                    // Agrupar préstamos por material
+                    Map<String, List<DtPrestamo>> prestamosPorMaterialDetalle = new HashMap<>();
+                    for (DtPrestamo p : prestamos) {
+                        if (materialesMultiples.containsKey(p.getMaterialId())) {
+                            if (!prestamosPorMaterialDetalle.containsKey(p.getMaterialId())) {
+                                prestamosPorMaterialDetalle.put(p.getMaterialId(), new ArrayList<>());
+                            }
+                            prestamosPorMaterialDetalle.get(p.getMaterialId()).add(p);
+                        }
+                    }
+                    
+                    // Ordenar por cantidad de préstamos
+                    List<Map.Entry<String, List<DtPrestamo>>> sortedMateriales = new ArrayList<>(prestamosPorMaterialDetalle.entrySet());
+                    sortedMateriales.sort((e1, e2) -> Integer.compare(e2.getValue().size(), e1.getValue().size()));
+                    
+                    for (Map.Entry<String, List<DtPrestamo>> entry : sortedMateriales) {
+                        String materialId = entry.getKey();
+                        List<DtPrestamo> prestamosDelMaterial = entry.getValue();
+                        
+                        // Obtener el nombre del material
+                        String nombreMaterial = materialId;
+                        if (!prestamosDelMaterial.isEmpty() && prestamosDelMaterial.get(0).getMaterialDescripcion() != null) {
+                            try {
+                                nombreMaterial = new String(prestamosDelMaterial.get(0).getMaterialDescripcion().getBytes("ISO-8859-1"), "UTF-8");
+                            } catch (Exception e) {
+                                nombreMaterial = prestamosDelMaterial.get(0).getMaterialDescripcion();
+                            }
+                        }
+                        
+                        int cantidadPrestamos = prestamosDelMaterial.size();
+                        String badgeColor = cantidadPrestamos >= 5 ? "bg-danger" : 
+                                           cantidadPrestamos >= 3 ? "bg-warning text-dark" : "bg-info text-white";
+                %>
+                <div class="card shadow-sm mt-4" id="detalle-<%= materialId %>">
                     <div class="card-body">
-                        <h5>Detalle de Préstamos Pendientes</h5>
+                        <h5>📋 <%= nombreMaterial %> 
+                            <span class="badge <%= badgeColor %> ms-2"><%= cantidadPrestamos %> préstamos activos</span>
+                        </h5>
+                        <p class="text-muted">ID: <code class="text-dark"><%= materialId %></code></p>
                         <hr>
                         <div class="table-responsive">
-                            <table class="table table-hover table-sm">
-                                <thead class="table-warning">
+                            <table class="table table-hover">
+                                <thead class="table-success">
                                     <tr>
-                                        <th>ID Préstamo</th>
-                                        <th>Fecha Préstamo</th>
-                                        <th>Material</th>
-                                        <th>Lector</th>
-                                        <th class="text-center">Acciones</th>
+                                        <th style="width: 15%;">ID Préstamo</th>
+                                        <th style="width: 20%;">Fecha Préstamo</th>
+                                        <th style="width: 30%;">Lector</th>
+                                        <th style="width: 20%;">Bibliotecario</th>
+                                        <th class="text-center" style="width: 15%;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% for (DtPrestamo p : prestamos) { %>
+                                    <% for (DtPrestamo p : prestamosDelMaterial) { %>
                                     <tr>
-                                        <td><code><%= p.getId() %></code></td>
+                                        <td>
+                                            <span class="badge bg-primary fs-6"><%= p.getId() %></span>
+                                        </td>
                                         <td><%= formatearFecha(p.getFechaSolicitud()) %></td>
-                                        <td><%= p.getMaterialDescripcion() != null ? p.getMaterialDescripcion() : p.getMaterialId() %></td>
                                         <td><%= p.getLectorNombre() != null ? p.getLectorNombre() : p.getLectorId() %></td>
+                                        <td><%= p.getBibliotecarioNombre() != null ? p.getBibliotecarioNombre() : p.getBibliotecarioId() %></td>
                                         <td class="text-center">
                                             <a href="ConsultarPrestamo?id=<%= p.getId() %>" 
                                                class="btn btn-sm btn-info text-white">
-                                                Ver
+                                                👁️ Ver Detalles
                                             </a>
                                         </td>
                                     </tr>
@@ -654,7 +742,10 @@
                         </div>
                     </div>
                 </div>
-                <% } %>
+                <% 
+                    }
+                } 
+                %>
             </div>
         </div>
     </div>

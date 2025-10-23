@@ -164,12 +164,13 @@
                             <table class="table table-hover">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th style="width: 15%;">ID</th>
-                                        <th style="width: 25%;">Material</th>
-                                        <th style="width: 15%;">Tipo</th>
-                                        <th class="text-center" style="width: 15%;">Estado</th>
-                                        <th class="text-center" style="width: 15%;">Fecha Solicitud</th>
-                                        <th class="text-center" style="width: 15%;">Acciones</th>
+                                        <th style="width: 12%;">ID</th>
+                                        <th style="width: 20%;">Material</th>
+                                        <th style="width: 12%;">Tipo</th>
+                                        <th class="text-center" style="width: 12%;">Estado</th>
+                                        <th class="text-center" style="width: 12%;">Fecha Solicitud</th>
+                                        <th class="text-center" style="width: 12%;">Fecha Devolución</th>
+                                        <th class="text-center" style="width: 20%;">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -224,7 +225,11 @@
                                                 Object fechaObj = prestamo.getFechaSolicitud();
                                                 String fechaOut = "";
                                                 if (fechaObj != null) {
-                                                    if (fechaObj instanceof java.util.Date) {
+                                                    if (fechaObj instanceof javax.xml.datatype.XMLGregorianCalendar) {
+                                                        javax.xml.datatype.XMLGregorianCalendar xmlCal = 
+                                                            (javax.xml.datatype.XMLGregorianCalendar) fechaObj;
+                                                        fechaOut = sdf.format(xmlCal.toGregorianCalendar().getTime());
+                                                    } else if (fechaObj instanceof java.util.Date) {
                                                         fechaOut = sdf.format((java.util.Date) fechaObj);
                                                     } else {
                                                         String f = fechaObj.toString();
@@ -242,6 +247,41 @@
                                             %>
                                                 <span class="badge bg-secondary"><%= fechaOut %></span>
                                             <% } catch (Exception e) { %>
+                                                <span class="badge bg-warning">Error</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="text-center">
+                                            <% 
+                                            try {
+                                                Object devObj = prestamo.getFechaDevolucion();
+                                                if (devObj != null) {
+                                                    String fechaOut = "";
+                                                    if (devObj instanceof javax.xml.datatype.XMLGregorianCalendar) {
+                                                        javax.xml.datatype.XMLGregorianCalendar xmlCal = 
+                                                            (javax.xml.datatype.XMLGregorianCalendar) devObj;
+                                                        fechaOut = sdf.format(xmlCal.toGregorianCalendar().getTime());
+                                                    } else if (devObj instanceof java.util.Date) {
+                                                        fechaOut = sdf.format((java.util.Date) devObj);
+                                                    } else {
+                                                        String f = devObj.toString();
+                                                        if (f.contains("T")) {
+                                                            String[] p = f.split("T")[0].split("-");
+                                                            if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
+                                                        } else if (f.contains("-")) {
+                                                            String[] p = f.split("-");
+                                                            if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
+                                                        } else if (f.contains("/")) {
+                                                            fechaOut = f;
+                                                        } else {
+                                                            fechaOut = f;
+                                                        }
+                                                    }
+                                            %>
+                                                    <span class="badge bg-success"><%= fechaOut %></span>
+                                            <%  } else { %>
+                                                    <span class="badge bg-light text-dark">Pendiente</span>
+                                            <%  } 
+                                            } catch (Exception e) { %>
                                                 <span class="badge bg-warning">Error</span>
                                             <% } %>
                                         </td>
