@@ -224,9 +224,6 @@
                         </div>
                         <h5 class="text-muted">No hay lectores registrados</h5>
                         <p class="text-muted mb-3">Aún no se han registrado lectores en el sistema</p>
-                        <a href="RegistroLector" class="btn btn-success">
-                            ➕ Registrar el Primer Lector
-                        </a>
                     </div>
                 </div>
                 <% } %>
