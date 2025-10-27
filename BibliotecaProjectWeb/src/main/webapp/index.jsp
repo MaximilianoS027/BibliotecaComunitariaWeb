@@ -59,17 +59,23 @@
         <div class="stats-banner">
             <div class="stats-container">
                 <div class="stat">
-                    <span class="number" id="libros-disponibles">1,247</span>
-                    <span class="label">Libros Disponibles</span>
+                    <span class="number" id="libros-disponibles">Cargando...</span>
+                    <span class="label">Materiales Disponibles</span>
                 </div>
                 <div class="stat">
-                    <span class="number" id="lectores-activos">89</span>
-                    <span class="label">Lectores Activos</span>
+                    <span class="number" id="lectores-activos">Cargando...</span>
+                    <span class="label">Total Lectores</span>
                 </div>
                 <div class="stat">
-                    <span class="number" id="prestamos-mes">156</span>
+                    <span class="number" id="prestamos-mes">Cargando...</span>
                     <span class="label">Préstamos Este Mes</span>
                 </div>
+            </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <span id="last-update">Actualizando datos...</span> | 
+                    <a href="Estadisticas" class="text-decoration-none">Ver estadísticas completas</a>
+                </small>
             </div>
         </div>
 
@@ -172,7 +178,92 @@
     
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
-</body>
-</html>
+    
+    <!-- Estadísticas en Tiempo Real -->
+    <script>
+        // Función para cargar estadísticas reales
+        function cargarEstadisticas() {
+            console.log('Cargando estadísticas del sistema...');
+            
+            // Mostrar indicador de carga
+            document.getElementById('libros-disponibles').textContent = 'Cargando...';
+            document.getElementById('lectores-activos').textContent = 'Cargando...';
+            document.getElementById('prestamos-mes').textContent = 'Cargando...';
+            document.getElementById('last-update').textContent = 'Actualizando datos...';
+            
+            // Crear un iframe oculto para cargar las estadísticas
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'Estadisticas';
+            document.body.appendChild(iframe);
+            
+            // Cuando el iframe carga, extraer los datos
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Buscar los elementos con los datos
+                    const materialesElement = iframeDoc.querySelector('.stat-number.text-info');
+                    const lectoresElement = iframeDoc.querySelector('.stat-number.text-success');
+                    const prestamosElement = iframeDoc.querySelector('.stat-number.text-secondary');
+                    
+                    // Actualizar los elementos en la página principal
+                    if (materialesElement) {
+                        document.getElementById('libros-disponibles').textContent = materialesElement.textContent;
+                    }
+                    
+                    if (lectoresElement) {
+                        document.getElementById('lectores-activos').textContent = lectoresElement.textContent;
+                    }
+                    
+                    if (prestamosElement) {
+                        document.getElementById('prestamos-mes').textContent = prestamosElement.textContent;
+                    }
+                    
+                    // Actualizar timestamp
+                    const now = new Date();
+                    document.getElementById('last-update').textContent = 
+                        'Última actualización: ' + now.toLocaleTimeString();
+                    
+                    console.log('Estadísticas cargadas exitosamente');
+                    
+                } catch (error) {
+                    console.error('Error al cargar estadísticas:', error);
+                    // En caso de error, usar valores por defecto
+                    document.getElementById('libros-disponibles').textContent = 'N/A';
+                    document.getElementById('lectores-activos').textContent = 'N/A';
+                    document.getElementById('prestamos-mes').textContent = 'N/A';
+                    document.getElementById('last-update').textContent = 'Error al cargar datos';
+                } finally {
+                    // Limpiar el iframe
+                    document.body.removeChild(iframe);
+                }
+            };
+            
+            // Timeout para evitar que se quede cargando indefinidamente
+            setTimeout(function() {
+                if (document.getElementById('libros-disponibles').textContent === 'Cargando...') {
+                    document.getElementById('libros-disponibles').textContent = 'N/A';
+                    document.getElementById('lectores-activos').textContent = 'N/A';
+                    document.getElementById('prestamos-mes').textContent = 'N/A';
+                    document.getElementById('last-update').textContent = 'Error de conexión';
+                    console.error('Timeout al cargar estadísticas');
+                }
+            }, 10000); // 10 segundos de timeout
+        }
+        
+        // Cargar estadísticas cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarEstadisticas();
+            
+            // Auto-refresh cada 2 minutos
+            setInterval(cargarEstadisticas, 120000);
+        });
+        
+        // Función para actualizar manualmente
+        function actualizarEstadisticas() {
+            cargarEstadisticas();
+        }
+    </script>
 
 

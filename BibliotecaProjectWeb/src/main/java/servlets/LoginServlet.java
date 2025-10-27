@@ -3,11 +3,10 @@ package servlets;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import publicadores.autenticacion.AutenticacionPublicadorService;
+import logica.WebServiceFactory;
 import publicadores.autenticacion.AutenticacionPublicador;
 
 /**
@@ -15,14 +14,8 @@ import publicadores.autenticacion.AutenticacionPublicador;
  * Consume Web Services de autenticación
  */
 @WebServlet("/Login")
-public class LoginServlet extends HttpServlet {
+public class LoginServlet extends BaseServlet {
     private static final long serialVersionUID = 1L;
-    private AutenticacionPublicador autenticacionWS;
-
-    public LoginServlet() {
-        super();
-        autenticacionWS = new AutenticacionPublicadorService().getAutenticacionPublicadorPort();
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -50,6 +43,7 @@ public class LoginServlet extends HttpServlet {
                 
                 // Intentar primero como bibliotecario
                 try {
+                    AutenticacionPublicador autenticacionWS = WebServiceFactory.getAutenticacionService();
                     usuarioId = autenticacionWS.autenticarBibliotecario(email, password);
                     if (usuarioId != null && !usuarioId.isEmpty()) {
                         HttpSession session = request.getSession();
@@ -74,6 +68,7 @@ public class LoginServlet extends HttpServlet {
                 
                 // Si no es bibliotecario, intentar como lector
                 try {
+                    AutenticacionPublicador autenticacionWS = WebServiceFactory.getAutenticacionService();
                     usuarioId = autenticacionWS.autenticarLector(email, password);
                     if (usuarioId != null && !usuarioId.isEmpty()) {
                         HttpSession session = request.getSession();
@@ -103,6 +98,7 @@ public class LoginServlet extends HttpServlet {
             } else if ("lector".equals(rol)) {
                 // Autenticar lector usando Web Service
                 System.out.println("Intentando autenticar lector...");
+                AutenticacionPublicador autenticacionWS = WebServiceFactory.getAutenticacionService();
                 usuarioId = autenticacionWS.autenticarLector(email, password);
                 System.out.println("Resultado autenticación lector: " + usuarioId);
                 
@@ -128,6 +124,7 @@ public class LoginServlet extends HttpServlet {
             } else if ("bibliotecario".equals(rol)) {
                 // Autenticar bibliotecario usando Web Service
                 System.out.println("Intentando autenticar bibliotecario...");
+                AutenticacionPublicador autenticacionWS = WebServiceFactory.getAutenticacionService();
                 usuarioId = autenticacionWS.autenticarBibliotecario(email, password);
                 System.out.println("Resultado autenticación bibliotecario: " + usuarioId);
                 
