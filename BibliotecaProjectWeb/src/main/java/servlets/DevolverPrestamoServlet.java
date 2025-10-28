@@ -17,7 +17,7 @@ import publicadores.prestamo.DatosInvalidosException_Exception;
 
 /**
  * Servlet para devolver préstamos
- * Solo accesible para usuarios con rol LECTOR (sus propios préstamos)
+ * Accesible para usuarios con rol LECTOR (sus propios préstamos) y BIBLIOTECARIO (cualquier préstamo)
  */
 @WebServlet("/DevolverPrestamo")
 public class DevolverPrestamoServlet extends HttpServlet {
@@ -32,6 +32,11 @@ public class DevolverPrestamoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        // CONFIGURAR CODIFICACIÓN UTF-8
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        
         // Verificar sesión y rol
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuarioId") == null) {
@@ -40,7 +45,7 @@ public class DevolverPrestamoServlet extends HttpServlet {
         }
         
         String rol = (String) session.getAttribute("rol");
-        if (!"LECTOR".equals(rol)) {
+        if (!"LECTOR".equals(rol) && !"BIBLIOTECARIO".equals(rol)) {
             response.sendRedirect("home.jsp?error=permisos");
             return;
         }
@@ -48,23 +53,29 @@ public class DevolverPrestamoServlet extends HttpServlet {
         String prestamoId = request.getParameter("id");
         
         if (prestamoId == null || prestamoId.trim().isEmpty()) {
-            response.sendRedirect("MisPrestamos?error=id_invalido");
+            if ("BIBLIOTECARIO".equals(rol)) {
+                response.sendRedirect("ListarPrestamos?error=id_invalido");
+            } else {
+                response.sendRedirect("MisPrestamos?error=id_invalido");
+            }
             return;
         }
         
         try {
-            // Verificar que el préstamo existe y pertenece al lector
+            // Verificar que el préstamo existe
             DtPrestamo prestamo = prestamoWS.obtenerPrestamo(prestamoId);
             String usuarioId = (String) session.getAttribute("usuarioId");
             
-            if (!prestamo.getLectorId().equals(usuarioId)) {
+            // Si es LECTOR, verificar que el préstamo le pertenece
+            if ("LECTOR".equals(rol) && !prestamo.getLectorId().equals(usuarioId)) {
                 response.sendRedirect("home.jsp?error=permisos");
                 return;
             }
             
             // Verificar que el préstamo puede ser devuelto
-            if (!"En Uso".equals(prestamo.getEstado())) {
-                response.sendRedirect("ConsultarPrestamo?id=" + prestamoId + "&error=no_devuelto");
+            if (!"En Uso".equals(prestamo.getEstado()) && !"EN_CURSO".equals(prestamo.getEstado())) {
+                String redirectUrl = "BIBLIOTECARIO".equals(rol) ? "ListarPrestamos" : "ConsultarPrestamo?id=" + prestamoId;
+                response.sendRedirect(redirectUrl + "?error=no_devuelto");
                 return;
             }
             
@@ -73,25 +84,19 @@ public class DevolverPrestamoServlet extends HttpServlet {
             String fechaDevolucion = sdf.format(new Date());
             
             // Llamar al Web Service
-            System.out.println("=== DEVOLVER PRÉSTAMO ===");
-            System.out.println("ID: " + prestamoId);
-            System.out.println("Fecha Devolución: " + fechaDevolucion);
-            
             prestamoWS.devolverPrestamo(prestamoId, fechaDevolucion);
             
-            // Redirigir con mensaje de éxito
-            response.sendRedirect("MisPrestamos?success=devolucion_exitosa");
+            // Redirigir con mensaje de éxito según el rol
+            String redirectUrl = "BIBLIOTECARIO".equals(rol) ? "ListarPrestamos" : "MisPrestamos";
+            response.sendRedirect(redirectUrl + "?success=devolucion_exitosa&t=" + System.currentTimeMillis());
             
         } catch (PrestamoNoExisteException_Exception e) {
-            System.out.println("Error: Préstamo no existe - " + e.getMessage());
             response.sendRedirect("MisPrestamos?error=prestamo_no_existe");
             
         } catch (DatosInvalidosException_Exception e) {
-            System.out.println("Error: Datos inválidos - " + e.getMessage());
             response.sendRedirect("MisPrestamos?error=devolucion_invalida");
             
         } catch (Exception e) {
-            System.out.println("ERROR en DevolverPrestamoServlet: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect("MisPrestamos?error=devolucion");
         }

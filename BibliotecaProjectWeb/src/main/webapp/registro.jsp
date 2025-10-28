@@ -170,11 +170,11 @@
                                         <label for="zona" class="form-label">Zona *</label>
                                         <select class="form-select" id="zona" name="zona" required>
                                             <option value="">Seleccione una zona</option>
-                                            <option value="Norte" <%= "Norte".equals(zona) ? "selected" : "" %>>Norte</option>
-                                            <option value="Sur" <%= "Sur".equals(zona) ? "selected" : "" %>>Sur</option>
-                                            <option value="Este" <%= "Este".equals(zona) ? "selected" : "" %>>Este</option>
-                                            <option value="Oeste" <%= "Oeste".equals(zona) ? "selected" : "" %>>Oeste</option>
-                                            <option value="Centro" <%= "Centro".equals(zona) ? "selected" : "" %>>Centro</option>
+                                            <option value="Biblioteca Central" <%= "Biblioteca Central".equals(zona) ? "selected" : "" %>>Biblioteca Central</option>
+                                            <option value="Sucursal Este" <%= "Sucursal Este".equals(zona) ? "selected" : "" %>>Sucursal Este</option>
+                                            <option value="Sucursal Oeste" <%= "Sucursal Oeste".equals(zona) ? "selected" : "" %>>Sucursal Oeste</option>
+                                            <option value="Biblioteca Infantil" <%= "Biblioteca Infantil".equals(zona) ? "selected" : "" %>>Biblioteca Infantil</option>
+                                            <option value="Archivo General" <%= "Archivo General".equals(zona) ? "selected" : "" %>>Archivo General</option>
                                         </select>
                                     </div>
                                 </div>

@@ -260,13 +260,31 @@ function cerrarSesion() {
 // ===================================
 
 /**
- * Inicializa las animaciones de las estadísticas
+ * Inicializa las animaciones de las estadísticas con datos reales
  */
 function inicializarEstadisticas() {
-    // Animar números al cargar la página
-    animarNumero('libros-disponibles', 1247);
-    animarNumero('lectores-activos', 89);
-    animarNumero('prestamos-mes', 156);
+    // Obtener datos reales del backend
+    fetch('EstadisticasAPI')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Datos recibidos:', data);
+            
+            // Animar números con valores reales
+            animarNumero('libros-disponibles', data.materialesDisponibles || 0);
+            animarNumero('lectores-activos', data.totalLectores || 0);
+            animarNumero('prestamos-mes', data.prestamosEsteMes || 0);
+            
+            // Actualizar timestamp
+            const now = new Date();
+            $('#last-update').text('Última actualización: ' + now.toLocaleTimeString());
+        })
+        .catch(error => {
+            console.error('Error al obtener estadísticas:', error);
+            // En caso de error, mostrar valores por defecto
+            animarNumero('libros-disponibles', 0);
+            animarNumero('lectores-activos', 0);
+            animarNumero('prestamos-mes', 0);
+        });
 }
 
 /**
@@ -295,24 +313,37 @@ function animarNumero(elementId, valorFinal, duracion = 2000) {
 }
 
 /**
- * Actualiza las estadísticas con valores reales (simulados)
+ * Actualiza las estadísticas con valores reales del backend
  */
 function actualizarEstadisticas() {
-    // Simular variaciones en las estadísticas
-    const variacion = () => Math.floor(Math.random() * 10) - 5; // -5 a +5
-    
-    const librosActuales = parseInt($('#libros-disponibles').text().replace(/,/g, ''));
-    const lectoresActuales = parseInt($('#lectores-activos').text().replace(/,/g, ''));
-    const prestamosActuales = parseInt($('#prestamos-mes').text().replace(/,/g, ''));
-    
-    const nuevosLibros = Math.max(0, librosActuales + variacion());
-    const nuevosLectores = Math.max(0, lectoresActuales + variacion());
-    const nuevosPrestamos = Math.max(0, prestamosActuales + variacion());
-    
-    // Animar hacia los nuevos valores
-    animarNumero('libros-disponibles', nuevosLibros, 1000);
-    animarNumero('lectores-activos', nuevosLectores, 1000);
-    animarNumero('prestamos-mes', nuevosPrestamos, 1000);
+    // Obtener datos reales del backend
+    fetch('EstadisticasAPI')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Actualizando estadísticas con datos:', data);
+            
+            const librosActuales = parseInt($('#libros-disponibles').text().replace(/,/g, ''));
+            const lectoresActuales = parseInt($('#lectores-activos').text().replace(/,/g, ''));
+            const prestamosActuales = parseInt($('#prestamos-mes').text().replace(/,/g, ''));
+            
+            // Solo actualizar si hay cambios significativos
+            if (Math.abs(librosActuales - data.materialesDisponibles) > 0) {
+                animarNumero('libros-disponibles', data.materialesDisponibles || 0, 1000);
+            }
+            if (Math.abs(lectoresActuales - data.totalLectores) > 0) {
+                animarNumero('lectores-activos', data.totalLectores || 0, 1000);
+            }
+            if (Math.abs(prestamosActuales - data.prestamosEsteMes) > 0) {
+                animarNumero('prestamos-mes', data.prestamosEsteMes || 0, 1000);
+            }
+            
+            // Actualizar timestamp
+            const now = new Date();
+            $('#last-update').text('Última actualización: ' + now.toLocaleTimeString());
+        })
+        .catch(error => {
+            console.error('Error al actualizar estadísticas:', error);
+        });
 }
 
 /**
@@ -430,29 +461,56 @@ function moveCarousel(direction) {
 }
 
 // ===================================
-// Funciones del modo oscuro/claro
+// Funciones principales de la aplicación
 // ===================================
 
 /**
- * Alterna entre modo oscuro y claro
+ * Carga libros destacados desde el backend
  */
-function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.getElementById('themeIcon');
-    const currentTheme = body.getAttribute('data-theme');
-    
-    if (currentTheme === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        themeIcon.textContent = '🌙';
-        localStorage.setItem('theme', 'light');
-    } else {
-        body.setAttribute('data-theme', 'dark');
-        themeIcon.textContent = '☀️';
-        localStorage.setItem('theme', 'dark');
-    }
-    
-    // Efecto de transición suave
-    body.style.transition = 'all 0.3s ease';
+function cargarLibrosDestacados() {
+    fetch('LibrosDestacadosAPI')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Libros destacados recibidos:', data);
+            
+            const container = document.getElementById('librosContainer');
+            if (!container) return;
+            
+            container.innerHTML = ''; // Limpiar contenido anterior
+            
+            if (data && data.length > 0) {
+                data.forEach((libro, index) => {
+                    const librosIconos = ['📖', '📚', '📕', '📗', '📘'];
+                    const icono = librosIconos[index % librosIconos.length];
+                    
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    
+                    const statusClass = libro.disponible === 'DISPONIBLE' ? 'available' : 'borrowed';
+                    const statusText = libro.disponible === 'DISPONIBLE' ? 'Disponible' : 'Prestado';
+                    
+                    card.innerHTML = `
+                        <div class="book-cover">${icono}</div>
+                        <h4>${libro.titulo}</h4>
+                        <span class="book-status ${statusClass}">${statusText}</span>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+            } else {
+                // Si no hay libros, mostrar mensaje
+                container.innerHTML = `
+                    <div class="book-card">
+                        <div class="book-cover">📚</div>
+                        <h4>Sin libros destacados</h4>
+                        <span class="book-status available">N/A</span>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar libros destacados:', error);
+        });
 }
 
 /**

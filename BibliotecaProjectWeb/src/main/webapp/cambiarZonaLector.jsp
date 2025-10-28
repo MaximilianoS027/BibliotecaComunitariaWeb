@@ -108,16 +108,19 @@
                             
                             <div class="mb-4">
                                 <label for="nuevaZona" class="form-label fw-bold">Nueva Zona *</label>
+                                <% 
+                                String zonaActual = lector.getZona().toString();
+                                %>
                                 <select class="form-select form-select-lg" id="nuevaZona" name="nuevaZona" required>
                                     <option value="">Seleccione la nueva zona</option>
-                                    <option value="Norte" <%= "Norte".equals(lector.getZona().toString()) ? "selected" : "" %>>Norte</option>
-                                    <option value="Sur" <%= "Sur".equals(lector.getZona().toString()) ? "selected" : "" %>>Sur</option>
-                                    <option value="Este" <%= "Este".equals(lector.getZona().toString()) ? "selected" : "" %>>Este</option>
-                                    <option value="Oeste" <%= "Oeste".equals(lector.getZona().toString()) ? "selected" : "" %>>Oeste</option>
-                                    <option value="Centro" <%= "Centro".equals(lector.getZona().toString()) ? "selected" : "" %>>Centro</option>
+                                    <option value="Biblioteca Central" <%= "Biblioteca Central".equals(zonaActual) ? "selected" : "" %>>Biblioteca Central</option>
+                                    <option value="Sucursal Este" <%= "Sucursal Este".equals(zonaActual) ? "selected" : "" %>>Sucursal Este</option>
+                                    <option value="Sucursal Oeste" <%= "Sucursal Oeste".equals(zonaActual) ? "selected" : "" %>>Sucursal Oeste</option>
+                                    <option value="Biblioteca Infantil" <%= "Biblioteca Infantil".equals(zonaActual) ? "selected" : "" %>>Biblioteca Infantil</option>
+                                    <option value="Archivo General" <%= "Archivo General".equals(zonaActual) ? "selected" : "" %>>Archivo General</option>
                                 </select>
                                 <div class="form-text">
-                                    La zona determina la ubicación geográfica del lector y puede afectar la disponibilidad de materiales y servicios.
+                                    La zona determina la ubicación de la biblioteca asignada al lector y puede afectar la disponibilidad de materiales y servicios.
                                 </div>
                             </div>
                             
@@ -149,21 +152,13 @@
                                         <h6 class="mb-0">ℹ️ Información sobre las Zonas</h6>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <ul class="list-unstyled mb-0">
-                                                    <li><span class="badge bg-primary me-2">Norte</span> Zona norte de la ciudad</li>
-                                                    <li><span class="badge bg-primary me-2">Sur</span> Zona sur de la ciudad</li>
-                                                    <li><span class="badge bg-primary me-2">Este</span> Zona este de la ciudad</li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <ul class="list-unstyled mb-0">
-                                                    <li><span class="badge bg-primary me-2">Oeste</span> Zona oeste de la ciudad</li>
-                                                    <li><span class="badge bg-primary me-2">Centro</span> Zona centro de la ciudad</li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2"><span class="badge bg-primary me-2">Biblioteca Central</span> Sede principal de la biblioteca</li>
+                                            <li class="mb-2"><span class="badge bg-primary me-2">Sucursal Este</span> Sucursal ubicada en la zona este</li>
+                                            <li class="mb-2"><span class="badge bg-primary me-2">Sucursal Oeste</span> Sucursal ubicada en la zona oeste</li>
+                                            <li class="mb-2"><span class="badge bg-primary me-2">Biblioteca Infantil</span> Biblioteca especializada para niños</li>
+                                            <li class="mb-2"><span class="badge bg-primary me-2">Archivo General</span> Archivo y documentación histórica</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +230,7 @@
             
             const confirmacion = confirm(
                 '¿Está seguro de cambiar la zona del lector de "' + zonaActual + '" a "' + nuevaZona + '"?\n\n' +
-                'Esta acción afectará la ubicación geográfica asignada al lector.'
+                'Esta acción afectará la ubicación de la biblioteca asignada al lector.'
             );
             
             return confirmacion;

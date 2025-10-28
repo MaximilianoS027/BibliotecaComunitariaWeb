@@ -1,4 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="publicadores.lector.LectorPublicadorService" %>
+<%@ page import="publicadores.lector.LectorPublicador" %>
+<%@ page import="publicadores.libro.LibroPublicadorService" %>
+<%@ page import="publicadores.libro.LibroPublicador" %>
+<%@ page import="publicadores.prestamo.PrestamoPublicadorService" %>
+<%@ page import="publicadores.prestamo.PrestamoPublicador" %>
+<%@ page import="publicadores.prestamo.DtPrestamo" %>
+<%@ page import="publicadores.articuloespecial.ArticuloEspecialPublicadorService" %>
+<%@ page import="publicadores.articuloespecial.ArticuloEspecialPublicador" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%
     // Verificar que el usuario esté autenticado
     HttpSession userSession = request.getSession(false);
@@ -10,6 +21,41 @@
     String rol = (String) userSession.getAttribute("rol");
     String email = (String) userSession.getAttribute("usuarioEmail");
     String usuarioId = (String) userSession.getAttribute("usuarioId");
+    
+    // ===== OBTENER DATOS REALES =====
+    int totalLectores = 0;
+    int materialesDisponibles = 0;
+    int prestamosActivos = 0;
+    
+    try {
+        // Obtener servicios web
+        LectorPublicador lectorWS = new LectorPublicadorService().getLectorPublicadorPort();
+        LibroPublicador libroWS = new LibroPublicadorService().getLibroPublicadorPort();
+        publicadores.articuloespecial.ArticuloEspecialPublicador articuloWS = 
+            new publicadores.articuloespecial.ArticuloEspecialPublicadorService().getArticuloEspecialPublicadorPort();
+        PrestamoPublicador prestamoWS = new PrestamoPublicadorService().getPrestamoPublicadorPort();
+        
+        // 1. Total de Lectores
+        publicadores.lector.StringArray lectoresArray = lectorWS.listarLectores();
+        totalLectores = lectoresArray != null && lectoresArray.getItem() != null ? lectoresArray.getItem().size() : 0;
+        
+        // 2. Total de Materiales (Libros + Artículos)
+        publicadores.libro.StringArray librosArray = libroWS.listarLibros();
+        int totalLibros = librosArray != null && librosArray.getItem() != null ? librosArray.getItem().size() : 0;
+        
+        publicadores.articuloespecial.StringArray articulosArray = articuloWS.listarArticulosEspeciales();
+        int totalArticulos = articulosArray != null && articulosArray.getItem() != null ? articulosArray.getItem().size() : 0;
+        
+        // Total de materiales en el catálogo (asume múltiples ejemplares)
+        materialesDisponibles = totalLibros + totalArticulos;
+        
+        // 3. Total de Préstamos (no podemos obtener detalles individuales)
+        publicadores.prestamo.StringArray prestamosArray = prestamoWS.listarPrestamos();
+        prestamosActivos = prestamosArray != null && prestamosArray.getItem() != null ? prestamosArray.getItem().size() : 0;
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,6 +72,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/theme-fixes.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -92,9 +139,9 @@
 
         <% if ("LECTOR".equals(rol)) { %>
         <!-- Dashboard para Lector -->
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+        <div class="d-flex justify-content-center align-items-stretch gap-4 flex-wrap mt-4">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <h5 class="card-title">📖 Mis Préstamos</h5>
                         <p class="card-text">Consulta el estado de tus préstamos activos</p>
@@ -102,8 +149,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <h5 class="card-title">📚 Catálogo</h5>
                         <p class="card-text">Explora nuestra colección completa</p>
@@ -111,10 +158,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <h5 class="card-title">➕ Nuevo Préstamo</h5>
                         <p class="card-text">Solicita un nuevo préstamo de material</p>
@@ -125,9 +170,9 @@
         </div>
         <% } else if ("BIBLIOTECARIO".equals(rol)) { %>
         <!-- Dashboard para Bibliotecario -->
-        <div class="row mt-4 row-cols-1 row-cols-lg-3 g-4">
+        <div class="d-flex justify-content-center align-items-stretch gap-4 flex-wrap mt-4">
             <!-- Botón Lectores -->
-            <div class="col">
+            <div style="flex: 1; min-width: 280px; max-width: 380px;">
                 <div class="card shadow-sm h-100">
                     <div class="card-body text-center d-flex flex-column">
                         <div class="mb-3">
@@ -141,7 +186,7 @@
             </div>
             
             <!-- Botón Materiales -->
-            <div class="col">
+            <div style="flex: 1; min-width: 280px; max-width: 380px;">
                 <div class="card shadow-sm h-100">
                     <div class="card-body text-center d-flex flex-column">
                         <div class="mb-3">
@@ -155,7 +200,7 @@
             </div>
             
             <!-- Botón Préstamos -->
-            <div class="col">
+            <div style="flex: 1; min-width: 280px; max-width: 380px;">
                 <div class="card shadow-sm h-100">
                     <div class="card-body text-center d-flex flex-column">
                         <div class="mb-3">
@@ -177,30 +222,24 @@
                         <h4 class="mb-0">📊 Reportes y Estadísticas del Sistema</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
                             <!-- Estadísticas Generales -->
-                            <div class="col-md-3">
+                            <div style="flex: 1; min-width: 200px; max-width: 250px;">
                                 <div class="text-center p-3 bg-light rounded">
-                                    <h3 class="text-success mb-1">150</h3>
+                                    <h3 class="text-success mb-1"><%= totalLectores %></h3>
                                     <p class="text-muted mb-0">Total Lectores</p>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div style="flex: 1; min-width: 200px; max-width: 250px;">
                                 <div class="text-center p-3 bg-light rounded">
-                                    <h3 class="text-info mb-1">89</h3>
-                                    <p class="text-muted mb-0">Libros Disponibles</p>
+                                    <h3 class="text-info mb-1"><%= materialesDisponibles %></h3>
+                                    <p class="text-muted mb-0">Materiales Disponibles</p>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div style="flex: 1; min-width: 200px; max-width: 250px;">
                                 <div class="text-center p-3 bg-light rounded">
-                                    <h3 class="text-warning mb-1">23</h3>
-                                    <p class="text-muted mb-0">Préstamos Activos</p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="text-center p-3 bg-light rounded">
-                                    <h3 class="text-danger mb-1">5</h3>
-                                    <p class="text-muted mb-0">Préstamos Vencidos</p>
+                                    <h3 class="text-warning mb-1"><%= prestamosActivos %></h3>
+                                    <p class="text-muted mb-0">Total Préstamos</p>
                                 </div>
                             </div>
                         </div>
@@ -368,6 +407,7 @@
         });
     </script>
     <% } %>
+    
 </body>
 </html>
 

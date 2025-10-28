@@ -1,0 +1,262 @@
+/* ===================================
+   Correcciones de Contraste para Modo Claro
+   =================================== */
+
+/* Cards y Contenedores */
+.card {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.card-body {
+    color: var(--text-primary) !important;
+}
+
+.card-header {
+    border-color: var(--border-color) !important;
+}
+
+.card-title,
+.card-text {
+    color: var(--text-primary) !important;
+}
+
+/* Tablas */
+.table {
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.table thead th {
+    border-color: var(--border-color) !important;
+}
+
+.table tbody td {
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Badges con Buen Contraste */
+.badge.bg-light {
+    background-color: var(--badge-light-bg) !important;
+    color: var(--badge-light-text) !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+/* Text Muted con buen contraste */
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-light {
+    color: #f8f9fa !important;
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-control:focus {
+    background-color: var(--bg-card) !important;
+    border-color: #667eea !important;
+    color: var(--text-primary) !important;
+}
+
+.form-label {
+    color: var(--text-primary) !important;
+}
+
+.form-select {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Alerts */
+.alert {
+    background-color: var(--alert-bg) !important;
+    color: var(--alert-text) !important;
+    border-color: var(--border-color) !important;
+}
+
+.alert-primary {
+    background-color: #cfe2ff !important;
+    color: #084298 !important;
+    border-color: #b6d4fe !important;
+}
+
+[data-theme="dark"] .alert-primary {
+    background-color: #0f3460 !important;
+    color: #9ec5fe !important;
+    border-color: #495057 !important;
+}
+
+.alert-success {
+    background-color: #d1e7dd !important;
+    color: #0f5132 !important;
+    border-color: #badbcc !important;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: #0f3460 !important;
+    color: #75b798 !important;
+    border-color: #495057 !important;
+}
+
+/* Modales */
+.modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+.modal-header {
+    border-color: var(--border-color) !important;
+}
+
+.modal-footer {
+    border-color: var(--border-color) !important;
+}
+
+/* Botones */
+.btn-outline-secondary {
+    color: var(--text-primary) !important;
+    border-color: var(--border-color) !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+/* Lista de Items */
+.list-group-item {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    background-color: var(--bg-card) !important;
+}
+
+.breadcrumb-item {
+    color: var(--text-primary) !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-secondary) !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #667eea !important;
+    border-color: #667eea !important;
+    color: #ffffff !important;
+}
+
+/* Material Cards (específico para nueva prestamo) */
+.material-card {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.material-card .card-title {
+    color: #667eea !important;
+}
+
+.material-card .card-text {
+    color: var(--text-primary) !important;
+}
+
+.material-card .card-text strong {
+    color: var(--text-primary) !important;
+}
+
+/* Nav Tabs */
+.nav-tabs {
+    border-color: var(--border-color) !important;
+}
+
+.nav-tabs .nav-link {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: var(--border-color) !important;
+    color: #667eea !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: #667eea !important;
+    background-color: var(--bg-primary) !important;
+    border-color: var(--border-color) !important;
+    border-bottom-color: var(--bg-primary) !important;
+}
+
+/* Code elements */
+code {
+    background-color: var(--badge-light-bg) !important;
+    color: var(--text-primary) !important;
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+}
+
+/* Mejoras para tablas en modo oscuro */
+[data-theme="dark"] .table-primary thead {
+    background-color: #0f3460 !important;
+    color: #e9ecef !important;
+}
+
+[data-theme="dark"] .table-success thead {
+    background-color: #0f3460 !important;
+    color: #e9ecef !important;
+}
+
+[data-theme="dark"] .table-warning thead {
+    background-color: #0f3460 !important;
+    color: #e9ecef !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Garantizar contraste en el navbar */
+.navbar {
+    background: linear-gradient(135deg, var(--navbar-bg-start) 0%, var(--navbar-bg-end) 100%) !important;
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: var(--navbar-text) !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Transiciones suaves */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+
+

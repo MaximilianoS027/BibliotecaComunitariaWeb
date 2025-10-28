@@ -35,11 +35,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="login.jsp">Iniciar Sesión</a>
                     </li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-light theme-toggle" onclick="toggleTheme()" id="themeToggle">
-                            <span id="themeIcon">🌙</span>
-                        </button>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -59,67 +54,73 @@
         <div class="stats-banner">
             <div class="stats-container">
                 <div class="stat">
-                    <span class="number" id="libros-disponibles">1,247</span>
-                    <span class="label">Libros Disponibles</span>
+                    <span class="number" id="libros-disponibles">Cargando...</span>
+                    <span class="label">Materiales Disponibles</span>
                 </div>
                 <div class="stat">
-                    <span class="number" id="lectores-activos">89</span>
-                    <span class="label">Lectores Activos</span>
+                    <span class="number" id="lectores-activos">Cargando...</span>
+                    <span class="label">Total Lectores</span>
                 </div>
                 <div class="stat">
-                    <span class="number" id="prestamos-mes">156</span>
+                    <span class="number" id="prestamos-mes">Cargando...</span>
                     <span class="label">Préstamos Este Mes</span>
                 </div>
             </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <span id="last-update">Actualizando datos...</span> | 
+                    <a href="Estadisticas" class="text-decoration-none">Ver estadísticas completas</a>
+                </small>
+            </div>
         </div>
 
-        <!-- Carrusel de Libros Destacados -->
-        <div class="featured-books-section mt-5">
-            <h2 class="text-center mb-4">📚 Libros Destacados</h2>
-            <div class="books-carousel">
-                <div class="carousel-container">
-                    <div class="book-card">
-                        <div class="book-cover">📖</div>
-                        <h4>El Quijote</h4>
-                        <p>Miguel de Cervantes</p>
-                        <span class="book-status available">Disponible</span>
+        <!-- Sección de Bienvenida -->
+        <div class="welcome-section mt-5">
+            <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white p-5">
+                    <h2 class="text-center mb-4" style="font-weight: 700; font-size: 2.5rem;">
+                        📚 Bienvenido a la Biblioteca Comunitaria
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <p class="text-center mb-4" style="font-size: 1.2rem; line-height: 1.8;">
+                                Un espacio donde el conocimiento se encuentra con la comunidad. Nuestra biblioteca 
+                                está dedicada a fomentar el aprendizaje, la cultura y el crecimiento personal a través 
+                                del acceso libre a una amplia colección de materiales educativos y literarios.
+                            </p>
+                            <div class="d-flex justify-content-center align-items-start gap-4 flex-wrap mt-5">
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">📖</div>
+                                    <h5 style="font-weight: 600;">Amplio Catálogo</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Libros y artículos especiales para todas las edades e intereses
+                                    </p>
+                                </div>
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">🤝</div>
+                                    <h5 style="font-weight: 600;">Servicio Personalizado</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Gestión eficiente de préstamos y atención dedicada
+                                    </p>
+                                </div>
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">🌟</div>
+                                    <h5 style="font-weight: 600;">Acceso Digital</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Consulta tu historial y solicita materiales en línea
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="book-card">
-                        <div class="book-cover">📚</div>
-                        <h4>Cien Años de Soledad</h4>
-                        <p>Gabriel García Márquez</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📕</div>
-                        <h4>1984</h4>
-                        <p>George Orwell</p>
-                        <span class="book-status borrowed">Prestado</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📗</div>
-                        <h4>Don Juan Tenorio</h4>
-                        <p>José Zorrilla</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📘</div>
-                        <h4>La Odisea</h4>
-                        <p>Homero</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                </div>
-                <div class="carousel-controls">
-                    <button class="carousel-btn prev" onclick="moveCarousel(-1)">❮</button>
-                    <button class="carousel-btn next" onclick="moveCarousel(1)">❯</button>
                 </div>
             </div>
         </div>
 
         <!-- Cards Section -->
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+        <div class="d-flex justify-content-center align-items-stretch gap-4 flex-wrap mt-5">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-lector">👤</div>
@@ -130,8 +131,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-bibliotecario">👨‍💼</div>
@@ -142,8 +143,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-catalogo">📖</div>
@@ -172,7 +173,84 @@
     
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
-</body>
-</html>
+    
+    <!-- Estadísticas en Tiempo Real -->
+    <script>
+        // Función para cargar estadísticas reales
+        function cargarEstadisticas() {
+            console.log('Cargando estadísticas del sistema...');
+            
+            // Mostrar indicador de carga
+            document.getElementById('libros-disponibles').textContent = 'Cargando...';
+            document.getElementById('lectores-activos').textContent = 'Cargando...';
+            document.getElementById('prestamos-mes').textContent = 'Cargando...';
+            document.getElementById('last-update').textContent = 'Actualizando datos...';
+            
+            // Crear un iframe oculto para cargar las estadísticas
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'Estadisticas';
+            document.body.appendChild(iframe);
+            
+            // Cuando el iframe carga, extraer los datos
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    
+                    // Buscar los elementos con los datos
+                    const materialesElement = iframeDoc.querySelector('.stat-number.text-info');
+                    const lectoresElement = iframeDoc.querySelector('.stat-number.text-success');
+                    const prestamosElement = iframeDoc.querySelector('.stat-number.text-secondary');
+                    
+                    // Actualizar los elementos en la página principal
+                    if (materialesElement) {
+                        document.getElementById('libros-disponibles').textContent = materialesElement.textContent;
+                    }
+                    
+                    if (lectoresElement) {
+                        document.getElementById('lectores-activos').textContent = lectoresElement.textContent;
+                    }
+                    
+                    if (prestamosElement) {
+                        document.getElementById('prestamos-mes').textContent = prestamosElement.textContent;
+                    }
+                    
+                    // Actualizar timestamp
+                    const now = new Date();
+                    document.getElementById('last-update').textContent = 
+                        'Última actualización: ' + now.toLocaleTimeString();
+                    
+                    console.log('Estadísticas cargadas exitosamente');
+                    
+                } catch (error) {
+                    console.error('Error al cargar estadísticas:', error);
+                    // En caso de error, usar valores por defecto
+                    document.getElementById('libros-disponibles').textContent = 'N/A';
+                    document.getElementById('lectores-activos').textContent = 'N/A';
+                    document.getElementById('prestamos-mes').textContent = 'N/A';
+                    document.getElementById('last-update').textContent = 'Error al cargar datos';
+                } finally {
+                    // Limpiar el iframe
+                    document.body.removeChild(iframe);
+                }
+            };
+            
+            // Timeout para evitar que se quede cargando indefinidamente
+            setTimeout(function() {
+                if (document.getElementById('libros-disponibles').textContent === 'Cargando...') {
+                    document.getElementById('libros-disponibles').textContent = 'N/A';
+                    document.getElementById('lectores-activos').textContent = 'N/A';
+                    document.getElementById('prestamos-mes').textContent = 'N/A';
+                    document.getElementById('last-update').textContent = 'Error de conexión';
+                    console.error('Timeout al cargar estadísticas');
+                }
+            }, 10000); // 10 segundos de timeout
+        }
+        
+        // Cargar estadísticas una sola vez cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarEstadisticas();
+        });
+    </script>
 
 

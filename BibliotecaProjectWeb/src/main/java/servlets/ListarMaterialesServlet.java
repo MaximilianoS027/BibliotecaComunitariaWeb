@@ -1,7 +1,11 @@
 package servlets;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import javax.xml.datatype.XMLGregorianCalendar;
 import publicadores.libro.LibroPublicadorService;
 import publicadores.libro.LibroPublicador;
 import publicadores.libro.DtLibro;
@@ -32,9 +37,24 @@ public class ListarMaterialesServlet extends HttpServlet {
         libroWS = new LibroPublicadorService().getLibroPublicadorPort();
         articuloEspecialWS = new ArticuloEspecialPublicadorService().getArticuloEspecialPublicadorPort();
     }
+    
+    /**
+     * Convierte XMLGregorianCalendar a java.util.Date
+     */
+    private Date convertirXMLGregorianCalendarADate(XMLGregorianCalendar xmlCalendar) {
+        if (xmlCalendar == null) {
+            return null;
+        }
+        return xmlCalendar.toGregorianCalendar().getTime();
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        
+        // CONFIGURAR CODIFICACIÓN UTF-8
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         
         // Verificar sesión
         HttpSession session = request.getSession(false);
@@ -45,6 +65,8 @@ public class ListarMaterialesServlet extends HttpServlet {
             response.sendRedirect("login.jsp");
             return;
         }
+        
+        String rol = (String) session.getAttribute("rol");
         
         try {
             System.out.println("=== LISTAR TODOS LOS MATERIALES ===");
@@ -115,6 +137,103 @@ public class ListarMaterialesServlet extends HttpServlet {
             request.setAttribute("totalLibros", libros.size());
             request.setAttribute("totalArticulos", articulos.size());
             request.setAttribute("totalMateriales", libros.size() + articulos.size());
+            
+            // ===== PROCESAMIENTO DE TRAZABILIDAD (solo para BIBLIOTECARIO) =====
+            if ("BIBLIOTECARIO".equals(rol)) {
+                // Obtener parámetros de filtro de fechas
+                String fechaDesdeParam = request.getParameter("fechaDesde");
+                String fechaHastaParam = request.getParameter("fechaHasta");
+                
+                Date fechaDesde = null;
+                Date fechaHasta = null;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                
+                // Parsear fechas si existen
+                if (fechaDesdeParam != null && !fechaDesdeParam.trim().isEmpty()) {
+                    try {
+                        fechaDesde = sdf.parse(fechaDesdeParam);
+                        System.out.println("Filtro fecha desde: " + fechaDesde);
+                    } catch (ParseException e) {
+                        request.setAttribute("errorTrazabilidad", "Formato de fecha inválido en 'Fecha Desde'");
+                    }
+                }
+                
+                if (fechaHastaParam != null && !fechaHastaParam.trim().isEmpty()) {
+                    try {
+                        fechaHasta = sdf.parse(fechaHastaParam);
+                        // Ajustar fechaHasta para incluir todo el día (23:59:59)
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(fechaHasta);
+                        cal.set(Calendar.HOUR_OF_DAY, 23);
+                        cal.set(Calendar.MINUTE, 59);
+                        cal.set(Calendar.SECOND, 59);
+                        cal.set(Calendar.MILLISECOND, 999);
+                        fechaHasta = cal.getTime();
+                        System.out.println("Filtro fecha hasta (ajustada): " + fechaHasta);
+                    } catch (ParseException e) {
+                        request.setAttribute("errorTrazabilidad", "Formato de fecha inválido en 'Fecha Hasta'");
+                    }
+                }
+                
+                // Validar que fecha desde no sea mayor que fecha hasta
+                if (fechaDesde != null && fechaHasta != null && fechaDesde.after(fechaHasta)) {
+                    request.setAttribute("errorTrazabilidad", "La fecha 'Desde' no puede ser posterior a la fecha 'Hasta'");
+                }
+                
+                // Filtrar por rango de fechas
+                List<DtLibro> librosFiltrados = new ArrayList<>();
+                List<DtArticuloEspecial> articulosFiltrados = new ArrayList<>();
+                
+                for (DtLibro libro : libros) {
+                    Date fechaRegistro = convertirXMLGregorianCalendarADate(libro.getFechaRegistro());
+                    if (fechaRegistro != null) {
+                        boolean cumpleFiltro = true;
+                        
+                        if (fechaDesde != null && fechaRegistro.before(fechaDesde)) {
+                            cumpleFiltro = false;
+                        }
+                        
+                        if (fechaHasta != null && fechaRegistro.after(fechaHasta)) {
+                            cumpleFiltro = false;
+                        }
+                        
+                        if (cumpleFiltro) {
+                            librosFiltrados.add(libro);
+                        }
+                    }
+                }
+                
+                for (DtArticuloEspecial articulo : articulos) {
+                    Date fechaRegistro = convertirXMLGregorianCalendarADate(articulo.getFechaRegistro());
+                    if (fechaRegistro != null) {
+                        boolean cumpleFiltro = true;
+                        
+                        if (fechaDesde != null && fechaRegistro.before(fechaDesde)) {
+                            cumpleFiltro = false;
+                        }
+                        
+                        if (fechaHasta != null && fechaRegistro.after(fechaHasta)) {
+                            cumpleFiltro = false;
+                        }
+                        
+                        if (cumpleFiltro) {
+                            articulosFiltrados.add(articulo);
+                        }
+                    }
+                }
+                
+                System.out.println("Libros filtrados para trazabilidad: " + librosFiltrados.size());
+                System.out.println("Artículos filtrados para trazabilidad: " + articulosFiltrados.size());
+                
+                // Guardar datos de trazabilidad
+                request.setAttribute("librosTrazabilidad", librosFiltrados);
+                request.setAttribute("articulosTrazabilidad", articulosFiltrados);
+                request.setAttribute("totalLibrosTrazabilidad", librosFiltrados.size());
+                request.setAttribute("totalArticulosTrazabilidad", articulosFiltrados.size());
+                request.setAttribute("totalDonaciones", librosFiltrados.size() + articulosFiltrados.size());
+                request.setAttribute("fechaDesde", fechaDesdeParam);
+                request.setAttribute("fechaHasta", fechaHastaParam);
+            }
             
             System.out.println("Total de materiales: " + (libros.size() + articulos.size()));
             

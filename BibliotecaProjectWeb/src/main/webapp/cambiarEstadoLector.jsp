@@ -92,7 +92,10 @@
                             <p class="mb-1"><strong>Nombre:</strong> <%= lector.getNombre() %></p>
                             <p class="mb-1"><strong>Email:</strong> <%= lector.getEmail() %></p>
                             <p class="mb-0"><strong>Estado actual:</strong> 
-                                <% if ("Activo".equals(lector.getEstado().toString())) { %>
+                                <% 
+                                String estadoActual = lector.getEstado().toString().toUpperCase();
+                                if ("ACTIVO".equals(estadoActual)) { 
+                                %>
                                     <span class="badge bg-success">Activo</span>
                                 <% } else { %>
                                     <span class="badge bg-warning">Suspendido</span>
@@ -114,8 +117,11 @@
                                 <label for="nuevoEstado" class="form-label fw-bold">Nuevo Estado *</label>
                                 <select class="form-select form-select-lg" id="nuevoEstado" name="nuevoEstado" required>
                                     <option value="">Seleccione el nuevo estado</option>
-                                    <option value="Activo" <%= "Activo".equals(lector.getEstado().toString()) ? "selected" : "" %>>Activo</option>
-                                    <option value="Suspendido" <%= "Suspendido".equals(lector.getEstado().toString()) ? "selected" : "" %>>Suspendido</option>
+                                    <% 
+                                    String estadoStr = lector.getEstado().toString().toUpperCase();
+                                    %>
+                                    <option value="Activo" <%= "ACTIVO".equals(estadoStr) ? "selected" : "" %>>Activo</option>
+                                    <option value="Suspendido" <%= "SUSPENDIDO".equals(estadoStr) ? "selected" : "" %>>Suspendido</option>
                                 </select>
                                 <div class="form-text">
                                     <strong>Activo:</strong> El lector puede realizar préstamos y usar todos los servicios.<br>
@@ -133,7 +139,10 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <p class="mb-1"><strong>Estado actual:</strong></p>
-                                                <% if ("Activo".equals(lector.getEstado().toString())) { %>
+                                                <% 
+                                                String estadoPreview = lector.getEstado().toString().toUpperCase();
+                                                if ("ACTIVO".equals(estadoPreview)) { 
+                                                %>
                                                     <span class="badge bg-success fs-6">Activo</span>
                                                 <% } else { %>
                                                     <span class="badge bg-warning fs-6">Suspendido</span>
@@ -204,7 +213,10 @@
         
         function confirmarCambio() {
             const nuevoEstado = document.getElementById('nuevoEstado').value;
-            const estadoActual = '<%= lector.getEstado().toString() %>';
+            const estadoActualRaw = '<%= lector.getEstado().toString().toUpperCase() %>';
+            
+            // Normalizar estados para comparación
+            const estadoActual = estadoActualRaw === 'ACTIVO' ? 'Activo' : 'Suspendido';
             
             if (nuevoEstado === '') {
                 alert('Por favor seleccione un nuevo estado');

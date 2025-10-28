@@ -27,6 +27,14 @@
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 %>
+<%!
+    // Método helper para formatear zonas
+    private String formatearZona(String zona) {
+        if (zona == null || zona.isEmpty()) return "N/A";
+        // El backend ya devuelve las zonas con el formato correcto
+        return zona;
+    }
+%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -163,14 +171,17 @@
                                         <td><strong><%= lector.getNombre() %></strong></td>
                                         <td><%= lector.getEmail() %></td>
                                         <td class="text-center">
-                                            <% if ("Activo".equals(lector.getEstado().toString())) { %>
+                                            <% 
+                                            String estadoLector = lector.getEstado().toString().toUpperCase();
+                                            if ("ACTIVO".equals(estadoLector)) { 
+                                            %>
                                                 <span class="badge bg-success">Activo</span>
                                             <% } else { %>
                                                 <span class="badge bg-warning">Suspendido</span>
                                             <% } %>
                                         </td>
                                         <td class="text-center">
-                                            <span class="badge bg-info"><%= lector.getZona() %></span>
+                                            <span class="badge bg-info"><%= formatearZona(lector.getZona().toString()) %></span>
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
@@ -178,6 +189,11 @@
                                                    class="btn btn-sm btn-info text-white" 
                                                    title="Ver detalles">
                                                     👁️
+                                                </a>
+                                                <a href="ConsultarPrestamosLector?lectorId=<%= lector.getId() %>" 
+                                                   class="btn btn-sm btn-success" 
+                                                   title="Ver préstamos">
+                                                    📋
                                                 </a>
                                                 <a href="CambiarEstadoLector?id=<%= lector.getId() %>" 
                                                    class="btn btn-sm btn-warning" 
@@ -208,9 +224,6 @@
                         </div>
                         <h5 class="text-muted">No hay lectores registrados</h5>
                         <p class="text-muted mb-3">Aún no se han registrado lectores en el sistema</p>
-                        <a href="RegistroLector" class="btn btn-success">
-                            ➕ Registrar el Primer Lector
-                        </a>
                     </div>
                 </div>
                 <% } %>

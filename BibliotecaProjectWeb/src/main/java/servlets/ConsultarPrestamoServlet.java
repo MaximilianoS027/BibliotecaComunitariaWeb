@@ -45,9 +45,6 @@ public class ConsultarPrestamoServlet extends HttpServlet {
         }
         
         try {
-            System.out.println("=== CONSULTAR PRÉSTAMO ===");
-            System.out.println("ID: " + prestamoId);
-            
             // Obtener detalles del préstamo
             DtPrestamo prestamo = prestamoWS.obtenerPrestamo(prestamoId);
             
@@ -68,11 +65,9 @@ public class ConsultarPrestamoServlet extends HttpServlet {
             }
             
         } catch (PrestamoNoExisteException_Exception e) {
-            System.out.println("Error: Préstamo no existe - " + e.getMessage());
             response.sendRedirect("MisPrestamos?error=prestamo_no_existe");
             
         } catch (Exception e) {
-            System.out.println("ERROR en ConsultarPrestamoServlet: " + e.getMessage());
             e.printStackTrace();
             response.sendRedirect("MisPrestamos?error=consulta");
         }

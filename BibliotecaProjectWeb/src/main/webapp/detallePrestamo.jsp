@@ -239,30 +239,19 @@
                                     <p class="form-control-plaintext">
                                         <% 
                                         try {
-                                            Object devObj = prestamo.getFechaDevolucion();
-                                            if (devObj != null) {
-                                                String fechaOut = "";
-                                                if (devObj instanceof java.util.Date) {
-                                                    fechaOut = sdf.format((java.util.Date) devObj);
-                                                } else {
-                                                    String f = devObj.toString();
-                                                    if (f.contains("T")) {
-                                                        String[] p = f.split("T")[0].split("-");
-                                                        if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
-                                                    } else if (f.contains("-")) {
-                                                        String[] p = f.split("-");
-                                                        if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
-                                                    } else {
-                                                        fechaOut = f;
-                                                    }
-                                                }
+                                            javax.xml.datatype.XMLGregorianCalendar fechaDevXml = prestamo.getFechaDevolucion();
+                                            if (fechaDevXml != null) {
+                                                String fechaOut = sdf.format(fechaDevXml.toGregorianCalendar().getTime());
                                         %>
                                                 <span class="badge bg-success fs-6"><%= fechaOut %></span>
                                         <%  } else { %>
                                                 <span class="badge bg-light text-dark fs-6">Pendiente</span>
                                         <%  } 
-                                        } catch (Exception e) { %>
-                                            <span class="badge bg-warning fs-6">Error al mostrar fecha</span>
+                                        } catch (Exception e) { 
+                                            // Mostrar error de depuración
+                                            e.printStackTrace();
+                                        %>
+                                            <span class="badge bg-warning fs-6">Error al mostrar fecha: <%= e.getMessage() %></span>
                                         <% } %>
                                     </p>
                                 </div>
