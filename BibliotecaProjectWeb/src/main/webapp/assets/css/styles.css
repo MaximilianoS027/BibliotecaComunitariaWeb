@@ -384,8 +384,13 @@ footer {
     
     /* Estadísticas responsivas */
     .stats-container {
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 1.5rem;
+    }
+    
+    .stat {
+        min-width: 150px;
     }
     
     .stat .number {
@@ -490,6 +495,10 @@ footer {
     gap: 1.5rem !important;
 }
 
+.gap-4 {
+    gap: 2rem !important;
+}
+
 /* ===================================
    Loading Spinner
    =================================== */
@@ -544,12 +553,16 @@ footer {
     align-items: center;
     position: relative;
     z-index: 1;
+    flex-wrap: nowrap;
+    gap: 2rem;
 }
 
 .stat {
     text-align: center;
     color: white;
     animation: fadeInUp 0.8s ease-out;
+    flex: 1;
+    min-width: 180px;
 }
 
 .stat:nth-child(1) { animation-delay: 0.1s; }

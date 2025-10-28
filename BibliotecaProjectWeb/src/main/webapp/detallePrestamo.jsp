@@ -239,42 +239,19 @@
                                     <p class="form-control-plaintext">
                                         <% 
                                         try {
-                                            Object devObj = prestamo.getFechaDevolucion();
-                                            if (devObj != null) {
-                                                String fechaOut = "";
-                                                if (devObj instanceof javax.xml.datatype.XMLGregorianCalendar) {
-                                                    // Manejar XMLGregorianCalendar
-                                                    javax.xml.datatype.XMLGregorianCalendar xmlCal = 
-                                                        (javax.xml.datatype.XMLGregorianCalendar) devObj;
-                                                    fechaOut = sdf.format(xmlCal.toGregorianCalendar().getTime());
-                                                } else if (devObj instanceof java.util.Date) {
-                                                    fechaOut = sdf.format((java.util.Date) devObj);
-                                                } else {
-                                                    // Manejar otros formatos (String, etc.)
-                                                    String f = devObj.toString();
-                                                    if (f.contains("T")) {
-                                                        // Formato ISO: 2025-10-21T10:30:00
-                                                        String[] p = f.split("T")[0].split("-");
-                                                        if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
-                                                    } else if (f.contains("-")) {
-                                                        // Formato yyyy-MM-dd
-                                                        String[] p = f.split("-");
-                                                        if (p.length == 3) fechaOut = p[2]+"/"+p[1]+"/"+p[0];
-                                                    } else if (f.contains("/")) {
-                                                        // Formato dd/MM/yyyy o MM/dd/yyyy
-                                                        fechaOut = f;
-                                                    } else {
-                                                        // Otros formatos
-                                                        fechaOut = f;
-                                                    }
-                                                }
+                                            javax.xml.datatype.XMLGregorianCalendar fechaDevXml = prestamo.getFechaDevolucion();
+                                            if (fechaDevXml != null) {
+                                                String fechaOut = sdf.format(fechaDevXml.toGregorianCalendar().getTime());
                                         %>
                                                 <span class="badge bg-success fs-6"><%= fechaOut %></span>
                                         <%  } else { %>
                                                 <span class="badge bg-light text-dark fs-6">Pendiente</span>
                                         <%  } 
-                                        } catch (Exception e) { %>
-                                            <span class="badge bg-warning fs-6">Error al mostrar fecha</span>
+                                        } catch (Exception e) { 
+                                            // Mostrar error de depuración
+                                            e.printStackTrace();
+                                        %>
+                                            <span class="badge bg-warning fs-6">Error al mostrar fecha: <%= e.getMessage() %></span>
                                         <% } %>
                                     </p>
                                 </div>

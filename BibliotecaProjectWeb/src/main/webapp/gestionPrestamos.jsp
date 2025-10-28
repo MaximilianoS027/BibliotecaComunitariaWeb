@@ -360,9 +360,9 @@
                                                     ▶️ Aprobar
                                                 </a>
                                                 <% } else if ("EN_CURSO".equals(p.getEstado())) { %>
-                                                <a href="CambiarEstadoPrestamo?id=<%= p.getId() %>&estado=DEVUELTO" 
+                                                <a href="DevolverPrestamo?id=<%= p.getId() %>" 
                                                    class="btn btn-sm btn-success"
-                                                   onclick="return confirmarCambioEstado('En Curso', 'Devuelto')">
+                                                   onclick="return confirm('¿Confirma que desea registrar la devolución de este material?\n\nSe guardará la fecha actual como fecha de devolución.')">
                                                     ✅ Devolver
                                                 </a>
                                                 <% } %>

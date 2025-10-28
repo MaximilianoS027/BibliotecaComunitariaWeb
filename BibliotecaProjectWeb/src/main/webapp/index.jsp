@@ -79,53 +79,53 @@
             </div>
         </div>
 
-        <!-- Carrusel de Libros Destacados -->
-        <div class="featured-books-section mt-5">
-            <h2 class="text-center mb-4">📚 Libros Destacados</h2>
-            <div class="books-carousel">
-                <div class="carousel-container">
-                    <div class="book-card">
-                        <div class="book-cover">📖</div>
-                        <h4>El Quijote</h4>
-                        <p>Miguel de Cervantes</p>
-                        <span class="book-status available">Disponible</span>
+        <!-- Sección de Bienvenida -->
+        <div class="welcome-section mt-5">
+            <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white p-5">
+                    <h2 class="text-center mb-4" style="font-weight: 700; font-size: 2.5rem;">
+                        📚 Bienvenido a la Biblioteca Comunitaria
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-8 mx-auto">
+                            <p class="text-center mb-4" style="font-size: 1.2rem; line-height: 1.8;">
+                                Un espacio donde el conocimiento se encuentra con la comunidad. Nuestra biblioteca 
+                                está dedicada a fomentar el aprendizaje, la cultura y el crecimiento personal a través 
+                                del acceso libre a una amplia colección de materiales educativos y literarios.
+                            </p>
+                            <div class="d-flex justify-content-center align-items-start gap-4 flex-wrap mt-5">
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">📖</div>
+                                    <h5 style="font-weight: 600;">Amplio Catálogo</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Libros y artículos especiales para todas las edades e intereses
+                                    </p>
+                                </div>
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">🤝</div>
+                                    <h5 style="font-weight: 600;">Servicio Personalizado</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Gestión eficiente de préstamos y atención dedicada
+                                    </p>
+                                </div>
+                                <div class="text-center" style="flex: 1; min-width: 250px; max-width: 300px;">
+                                    <div class="feature-icon mb-3" style="font-size: 3rem;">🌟</div>
+                                    <h5 style="font-weight: 600;">Acceso Digital</h5>
+                                    <p style="font-size: 0.95rem; opacity: 0.9;">
+                                        Consulta tu historial y solicita materiales en línea
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="book-card">
-                        <div class="book-cover">📚</div>
-                        <h4>Cien Años de Soledad</h4>
-                        <p>Gabriel García Márquez</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📕</div>
-                        <h4>1984</h4>
-                        <p>George Orwell</p>
-                        <span class="book-status borrowed">Prestado</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📗</div>
-                        <h4>Don Juan Tenorio</h4>
-                        <p>José Zorrilla</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                    <div class="book-card">
-                        <div class="book-cover">📘</div>
-                        <h4>La Odisea</h4>
-                        <p>Homero</p>
-                        <span class="book-status available">Disponible</span>
-                    </div>
-                </div>
-                <div class="carousel-controls">
-                    <button class="carousel-btn prev" onclick="moveCarousel(-1)">❮</button>
-                    <button class="carousel-btn next" onclick="moveCarousel(1)">❯</button>
                 </div>
             </div>
         </div>
 
         <!-- Cards Section -->
-        <div class="row mt-5">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+        <div class="d-flex justify-content-center align-items-stretch gap-4 flex-wrap mt-5">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-lector">👤</div>
@@ -136,8 +136,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-bibliotecario">👨‍💼</div>
@@ -148,8 +148,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
+            <div style="flex: 1; min-width: 280px; max-width: 350px;">
+                <div class="card shadow-sm h-100">
                     <div class="card-body text-center">
                         <div class="icon-container mb-3">
                             <div class="icon-catalogo">📖</div>
@@ -252,18 +252,10 @@
             }, 10000); // 10 segundos de timeout
         }
         
-        // Cargar estadísticas cuando la página esté lista
+        // Cargar estadísticas una sola vez cuando la página esté lista
         document.addEventListener('DOMContentLoaded', function() {
             cargarEstadisticas();
-            
-            // Auto-refresh cada 2 minutos
-            setInterval(cargarEstadisticas, 120000);
         });
-        
-        // Función para actualizar manualmente
-        function actualizarEstadisticas() {
-            cargarEstadisticas();
-        }
     </script>
 
 
