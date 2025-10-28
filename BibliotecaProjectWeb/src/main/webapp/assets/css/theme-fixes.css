@@ -1,5 +1,5 @@
 /* ===================================
-   Correcciones de Contraste para Modo Claro/Oscuro
+   Correcciones de Contraste para Modo Claro
    =================================== */
 
 /* Cards y Contenedores */
@@ -48,26 +48,13 @@
     color: #ffffff !important;
 }
 
-[data-theme="dark"] .badge.bg-secondary {
-    background-color: #495057 !important;
-    color: #ffffff !important;
-}
-
 /* Text Muted con buen contraste */
 .text-muted {
     color: var(--text-muted) !important;
 }
 
-[data-theme="dark"] .text-muted {
-    color: #adb5bd !important;
-}
-
 .text-light {
     color: #f8f9fa !important;
-}
-
-[data-theme="dark"] .text-light {
-    color: #e9ecef !important;
 }
 
 /* Forms */

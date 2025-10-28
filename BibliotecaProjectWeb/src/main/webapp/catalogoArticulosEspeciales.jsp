@@ -2,6 +2,7 @@
 <%@ page import="publicadores.articuloespecial.DtArticuloEspecial" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="javax.xml.datatype.XMLGregorianCalendar" %>
 <%
     // Verificar que el usuario esté autenticado
     HttpSession userSession = request.getSession(false);
@@ -20,6 +21,20 @@
     String success = request.getParameter("success");
     
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
+<%!
+    // Método helper para convertir XMLGregorianCalendar a String formateado
+    private String formatearFecha(XMLGregorianCalendar xmlCalendar) {
+        if (xmlCalendar == null) {
+            return "Sin fecha";
+        }
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            return sdf.format(xmlCalendar.toGregorianCalendar().getTime());
+        } catch (Exception e) {
+            return "Error";
+        }
+    }
 %>
 <!DOCTYPE html>
 <html lang="es">
@@ -112,6 +127,12 @@
         </div>
         <% } %>
         
+        <!-- Mensaje informativo sobre fechas -->
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>ℹ️ Información:</strong> Las fechas de registro se muestran automáticamente cuando están disponibles en el sistema.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
         <% if (error != null) { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> <%= error %>
@@ -183,23 +204,7 @@
                                             <span class="badge bg-info"><%= articulo.getDimensiones() %></span>
                                         </td>
                                         <td class="text-center">
-                                            <% 
-                                            try {
-                                                if (articulo.getFechaRegistro() != null) { 
-                                            %>
-                                                <%= sdf.format(articulo.getFechaRegistro()) %>
-                                            <% 
-                                                } else {
-                                            %>
-                                                -
-                                            <% 
-                                                }
-                                            } catch (Exception e) {
-                                            %>
-                                                -
-                                            <%
-                                            }
-                                            %>
+                                            <span class="badge bg-success"><%= formatearFecha(articulo.getFechaRegistro()) %></span>
                                         </td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">

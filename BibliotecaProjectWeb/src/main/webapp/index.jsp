@@ -35,11 +35,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="login.jsp">Iniciar Sesión</a>
                     </li>
-                    <li class="nav-item">
-                        <button class="btn btn-outline-light theme-toggle" onclick="toggleTheme()" id="themeToggle">
-                            <span id="themeIcon">🌙</span>
-                        </button>
-                    </li>
                 </ul>
             </div>
         </div>

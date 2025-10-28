@@ -185,7 +185,7 @@ public class NuevoPrestamoServlet extends HttpServlet {
         String lectorId = (String) session.getAttribute("usuarioId");
         String materialId = request.getParameter("materialId");
         String materialTipo = request.getParameter("materialTipo");
-        // Obtener un bibliotecario válido del sistema dinámicamente
+        // Obtener un bibliotecario válido del sistema dinámicamente de forma aleatoria
         String bibliotecarioId = null;
         try {
             publicadores.bibliotecario.BibliotecarioPublicadorService bibliotecarioService = 
@@ -195,8 +195,12 @@ public class NuevoPrestamoServlet extends HttpServlet {
             
             publicadores.bibliotecario.StringArray bibliotecariosArray = bibliotecarioWS.listarBibliotecarios();
             if (bibliotecariosArray != null && bibliotecariosArray.getItem() != null && !bibliotecariosArray.getItem().isEmpty()) {
-                // Extraer ID del primer bibliotecario disponible
-                String item = bibliotecariosArray.getItem().get(0);
+                // Seleccionar bibliotecario de forma aleatoria
+                java.util.List<String> bibliotecarios = bibliotecariosArray.getItem();
+                java.util.Random random = new java.util.Random();
+                int indiceAleatorio = random.nextInt(bibliotecarios.size());
+                
+                String item = bibliotecarios.get(indiceAleatorio);
                 String extraido = item;
                 if (item.contains(" | ")) {
                     // Formato: B1 | nombre (email)
@@ -206,7 +210,7 @@ public class NuevoPrestamoServlet extends HttpServlet {
                     extraido = item.split(" - ")[0];
                 }
                 bibliotecarioId = extraido.trim();
-                System.out.println("Bibliotecario seleccionado automáticamente (ID extraído): " + bibliotecarioId + " | Original: " + item);
+                System.out.println("Bibliotecario seleccionado aleatoriamente (índice " + indiceAleatorio + "): " + bibliotecarioId + " | Original: " + item);
             } else {
                 throw new Exception("No hay bibliotecarios disponibles en el sistema");
             }
@@ -237,16 +241,26 @@ public class NuevoPrestamoServlet extends HttpServlet {
                 return;
             }
             
-            // Validar que el lector existe en el sistema
+            // Validar que el lector existe en el sistema y está activo
             try {
                 publicadores.lector.LectorPublicadorService lectorService = 
                     new publicadores.lector.LectorPublicadorService();
                 publicadores.lector.LectorPublicador lectorWS = 
                     lectorService.getLectorPublicadorPort();
                 
-                // Intentar obtener el lector para validar que existe
-                lectorWS.obtenerLector(lectorId);
+                // Obtener el lector para validar que existe y está activo
+                publicadores.lector.DtLector lector = lectorWS.obtenerLector(lectorId);
                 System.out.println("Lector validado: " + lectorId);
+                
+                // Verificar que el lector esté activo (no suspendido)
+                if (lector.getEstado() != null && "SUSPENDIDO".equals(lector.getEstado().toString().toUpperCase())) {
+                    System.out.println("Error: Lector suspendido - " + lectorId);
+                    request.setAttribute("error", "No puede solicitar préstamos porque su cuenta está suspendida. Contacte al bibliotecario para reactivar su cuenta.");
+                    doGet(request, response);
+                    return;
+                }
+                
+                System.out.println("Lector activo validado: " + lectorId);
             } catch (Exception e) {
                 System.out.println("Error: Lector no existe - " + lectorId);
                 request.setAttribute("error", "Error: El usuario no existe en el sistema");
@@ -264,7 +278,7 @@ public class NuevoPrestamoServlet extends HttpServlet {
             System.out.println("Bibliotecario ID: " + bibliotecarioId);
             System.out.println("Material ID: " + materialId);
             System.out.println("Material Tipo: " + materialTipo);
-            System.out.println("Estado: EN_CURSO");
+            System.out.println("Estado: PENDIENTE");
             System.out.println("Fecha Solicitud: " + fechaSolicitud);
             
             // Validar que todos los parámetros estén presentes
@@ -276,10 +290,10 @@ public class NuevoPrestamoServlet extends HttpServlet {
             System.out.println("- Lector: " + lectorId);
             System.out.println("- Bibliotecario: " + bibliotecarioId);
             System.out.println("- Material: " + materialId);
-            System.out.println("- Estado: EN_CURSO");
+            System.out.println("- Estado: PENDIENTE");
             System.out.println("- Fecha: " + fechaSolicitud);
             
-            prestamoWS.registrarPrestamo(lectorId, bibliotecarioId, materialId, fechaSolicitud, "EN_CURSO");
+            prestamoWS.registrarPrestamo(lectorId, bibliotecarioId, materialId, fechaSolicitud, "PENDIENTE");
             System.out.println("Préstamo registrado exitosamente");
             
             // Redirigir con mensaje de éxito

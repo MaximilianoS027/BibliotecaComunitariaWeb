@@ -461,30 +461,8 @@ function moveCarousel(direction) {
 }
 
 // ===================================
-// Funciones del modo oscuro/claro
+// Funciones principales de la aplicación
 // ===================================
-
-/**
- * Alterna entre modo oscuro y claro
- */
-function toggleTheme() {
-    const body = document.body;
-    const themeIcon = document.getElementById('themeIcon');
-    const currentTheme = body.getAttribute('data-theme');
-    
-    if (currentTheme === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        themeIcon.textContent = '🌙';
-        localStorage.setItem('theme', 'light');
-    } else {
-        body.setAttribute('data-theme', 'dark');
-        themeIcon.textContent = '☀️';
-        localStorage.setItem('theme', 'dark');
-    }
-    
-    // Efecto de transición suave
-    body.style.transition = 'all 0.3s ease';
-}
 
 /**
  * Carga libros destacados desde el backend
